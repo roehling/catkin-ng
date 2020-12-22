@@ -1,0 +1,2 @@
+EXPORT_DEPENDS = "@arg_DEPENDS@".split(";") if "@arg_DEPENDS@" else []
+CMAKE_FILES = "@CATKIN_PACKAGE_CMAKE_FILES@".split(";") if "@CATKIN_PACKAGE_CMAKE_FILES@" else []
