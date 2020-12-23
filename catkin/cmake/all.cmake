@@ -37,4 +37,8 @@ catkin_destinations()
 catkin_find_python_interpreter()
 catkin_project()
 
+# The following dummy variable is merely set to prevent CMake from complaining about
+# potentially unused variables:
+# - BUILD_SHARED_LIBS is only used if add_library() is called in the package
 set(ignore_unused_warning "${BUILD_SHARED_LIBS}")
+unset(ignore_unused_warning)
