@@ -54,7 +54,6 @@ set(cmake_files
     cmake/package-config.context.in
     cmake/package.cmake
     cmake/project.cmake
-    cmake/python-install.cmake.in
     cmake/python.cmake
     cmake/script.context.in
     cmake/status.cmake
