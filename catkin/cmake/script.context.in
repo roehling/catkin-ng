@@ -18,3 +18,4 @@
 ##############################################################################
 DEVELSPACE = "@DEVELSPACE@" == "TRUE"
 INSTALLSPACE = "@INSTALLSPACE@" == "TRUE"
+PREFIX = "@PREFIX@"

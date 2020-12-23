@@ -31,8 +31,6 @@ function(catkin_package)
     include(CMakePackageConfigHelpers)
     set(CATKIN_GENERATED_DIR "${CMAKE_CURRENT_BINARY_DIR}/catkin-generated")
     file(MAKE_DIRECTORY "${CATKIN_GENERATED_DIR}")
-    list(TRANSFORM arg_LIBRARIES PREPEND "${arg_NAMESPACE}")
-    set(CATKIN_PACKAGE_LIBRARIES "${arg_LIBRARIES}")
 
     catkin_export(EXPORT "${arg_EXPORT}" NAMESPACE "${arg_NAMESPACE}" FILE "${PROJECT_NAME}Targets" TARGETS ${arg_TARGETS} SCRIPTS ${arg_SCRIPTS})
 

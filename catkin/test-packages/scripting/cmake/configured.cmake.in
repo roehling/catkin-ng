@@ -1,0 +1,5 @@
+message(STATUS "I am configured to tell you that CATKIN_DEVEL_PREFIX=\"@CATKIN_DEVEL_PREFIX@\"")
+
+function(scripting_fun)
+    message(STATUS "Yay, I am a function from package '@PROJECT_NAM@'!")
+endfunction()
