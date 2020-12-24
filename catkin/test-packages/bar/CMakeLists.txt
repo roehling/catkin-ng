@@ -10,4 +10,4 @@ target_include_directories(bar PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_D
 target_link_libraries(bar PUBLIC foo::foo)
 install(DIRECTORY include/${PROJECT_NAME} DESTINATION ${CATKIN_GLOBAL_INCLUDE_DESTINATION})
 
-catkin_package(TARGETS bar DEPENDS foo)
+catkin_package(TARGETS bar)

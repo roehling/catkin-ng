@@ -1,2 +1,6 @@
-EXPORT_DEPENDS = "@arg_DEPENDS@".split(";") if "@arg_DEPENDS@" else []
-CMAKE_FILES = "@CATKIN_PACKAGE_CMAKE_FILES@".split(";") if "@CATKIN_PACKAGE_CMAKE_FILES@" else []
+def split_list(L):
+    return [item for item in L.split(";") if item]
+
+EXPORTED_DEPENDS = split_list("@CATKIN_PACKAGE_EXPORTED_DEPENDS@")
+EXPORTED_CMAKE_FILES = split_list("@CATKIN_PACKAGE_EXPORTED_CMAKE_FILES@")
+EXPORTED_TARGET_FILES = split_list("@CATKIN_PACKAGE_EXPORTED_TARGET_FILES@")

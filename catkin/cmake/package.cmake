@@ -17,7 +17,7 @@
 #
 ##############################################################################
 function(catkin_package)
-    cmake_parse_arguments(arg "" "COMPATIBILITY;EXPORT;NAMESPACE" "DEPENDS;TARGETS;SCRIPTS" ${ARGN})
+    cmake_parse_arguments(arg "" "COMPATIBILITY;EXPORT;NAMESPACE" "DEPENDS;TARGETS;CMAKE_SCRIPTS" ${ARGN})
     if(arg_UNPARSED_ARGUMENTS)
         message(FATAL_ERROR "package '${PROJECT_NAME}' called catkin_package() with invalid parameters: ${arg_UNPARSED_ARGUMENTS}")
     endif()
@@ -32,7 +32,10 @@ function(catkin_package)
     set(CATKIN_GENERATED_DIR "${CMAKE_CURRENT_BINARY_DIR}/catkin-generated")
     file(MAKE_DIRECTORY "${CATKIN_GENERATED_DIR}")
 
-    catkin_export(EXPORT "${arg_EXPORT}" NAMESPACE "${arg_NAMESPACE}" FILE "${PROJECT_NAME}Targets" TARGETS ${arg_TARGETS} SCRIPTS ${arg_SCRIPTS})
+    catkin_export(EXPORT "${arg_EXPORT}" NAMESPACE "${arg_NAMESPACE}" FILE "${PROJECT_NAME}Targets" TARGETS ${arg_TARGETS} CMAKE_SCRIPTS ${arg_CMAKE_SCRIPTS})
+
+    list(APPEND CATKIN_PACKAGE_EXPORTED_DEPENDS ${arg_DEPENDS})
+    list(REMOVE_DUPLICATES CATKIN_PACKAGE_EXPORTED_DEPENDS)
 
     configure_file("${CATKIN_CMAKE_DIR}/package-config.context.in" "${CATKIN_GENERATED_DIR}/package-config.context" @ONLY)
     execute_process(COMMAND "${CATKIN_PYTHON_EXECUTABLE}" -m em -F "${CATKIN_GENERATED_DIR}/package-config.context" -o "${CATKIN_GENERATED_DIR}/package-config.cmake.in" "${CATKIN_CMAKE_DIR}/package-config.cmake.em")
@@ -43,6 +46,9 @@ function(catkin_package)
     endif()
     write_basic_package_version_file("${CATKIN_GENERATED_DIR}/${PROJECT_NAME}ConfigVersion.cmake" VERSION "${PROJECT_VERSION}" COMPATIBILITY "${arg_COMPATIBILITY}" ${arch_indep})
     if(CATKIN_DEVEL_PREFIX)
+        if(CATKIN_PACKAGE_EXPORTED_TARGET_FILES)
+            file(COPY "${CATKIN_CMAKE_DIR}/list_exported_targets.py" DESTINATION "${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_CMAKE_DESTINATION}")
+        endif()
         file(COPY "${CATKIN_GENERATED_DIR}/${PROJECT_NAME}ConfigVersion.cmake" DESTINATION "${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_CMAKE_DESTINATION}")
         configure_package_config_file("${CATKIN_GENERATED_DIR}/package-config.cmake.in" "${CATKIN_DEVEL_PREFIX}/${CATKIN_PACKAGE_CMAKE_DESTINATION}/${PROJECT_NAME}Config.cmake"
             INSTALL_DESTINATION "${CATKIN_PACKAGE_CMAKE_DESTINATION}"
@@ -59,4 +65,7 @@ function(catkin_package)
             "${CATKIN_GENERATED_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
         DESTINATION "${CATKIN_PACKAGE_CMAKE_DESTINATION}"
     )
+    if(CATKIN_PACKAGE_EXPORTED_TARGET_FILES)
+        install(FILES "${CATKIN_CMAKE_DIR}/list_exported_targets.py" DESTINATION "${CATKIN_PACKAGE_CMAKE_DESTINATION}")
+    endif()    
 endfunction()
