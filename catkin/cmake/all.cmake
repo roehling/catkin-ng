@@ -33,9 +33,9 @@ include("${CATKIN_CMAKE_DIR}/project.cmake")
 include("${CATKIN_CMAKE_DIR}/python.cmake")
 include("${CATKIN_CMAKE_DIR}/status.cmake")
 
-catkin_destinations()
 catkin_find_python_interpreter()
 catkin_project()
+catkin_destinations()
 
 # The following dummy variable is merely set to prevent CMake from complaining about
 # potentially unused variables:
