@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+    <name>hazel</name>
+    <version>1.0.0</version>
+    <description>Next-generation hazel build system</description>
+    <license>Apache-2.0</license>
+    <author>Timo Röhling</author>
+    <maintainer email="timo.roehling@fkie.fraunhofer.de">Timo Röhling</maintainer>
+    <buildtool_depend>cmake</buildtool_depend>
+    <export>
+        <architecture_independent/>
+    </export>
+</package>
