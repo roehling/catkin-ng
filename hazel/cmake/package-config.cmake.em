@@ -13,11 +13,12 @@ include(CMakeFindDependencyMacro)
 @[for dep in EXPORTED_DEPENDS]@
 find_dependency(@dep)
 @[end for]@
-@[end if]
+@[end if]@
+
 @[for inc in EXPORTED_CMAKE_FILES]@
 include("${CMAKE_CURRENT_LIST_DIR}/@(inc).cmake")
-
 @[end for]@
+
 @[if EXPORTED_TARGET_FILES]@
 find_package(Python QUIET COMPONENTS Interpreter)
 if(Python_FOUND)
