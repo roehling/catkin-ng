@@ -1,5 +1,9 @@
 @@PACKAGE_INIT@@
 
+if(@@PROJECT_NAME@@_FOUND AND "@@PROJECT_NAME@@" IN_LIST HAZEL_IMPORTED_PACKAGES)
+    return()
+endif()
+
 set(@@PROJECT_NAME@@_IS_HAZEL_PACKAGE TRUE)
 set(@@PROJECT_NAME@@_HAZEL_VERSION "@@HAZEL_VERSION@@")
 set(@@PROJECT_NAME@@_EXPORTED_TARGETS)
@@ -33,3 +37,7 @@ if(NOT @@PROJECT_NAME@@_FIND_QUIETLY)
     message(STATUS "Found @@PROJECT_NAME@@: ${PACKAGE_PREFIX_DIR} (found version \"@@PROJECT_VERSION@@\") imported targets: ${target_count}")
 endif()
 set(@@PROJECT_NAME@@_FOUND TRUE)
+
+if(DEFINED HAZEL_PACKAGE_NAME AND NOT "@@PROJECT_NAME@@" IN_LIST HAZEL_PACKAGE_BUILD_DEPENDS)
+    message(AUTHOR_WARNING "Package '${HAZEL_PACKAGE_NAME}' does not declare its build_depend on '@@PROJECT_NAME@@'")
+endif()
