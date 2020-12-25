@@ -67,5 +67,10 @@ function(hazel_package)
     )
     if(HAZEL_PACKAGE_EXPORTED_TARGET_FILES)
         install(FILES "${HAZEL_CMAKE_DIR}/list_exported_targets.py" DESTINATION "${HAZEL_PACKAGE_CMAKE_DESTINATION}")
-    endif()    
+    endif()
+    # Preliminary support for ament resource index
+    file(TOUCH "${HAZEL_GENERATED_DIR}/${PROJECT_NAME}")
+    install(FILES "${HAZEL_GENERATED_DIR}/${PROJECT_NAME}" DESTINATION "${HAZEL_GLOBAL_SHARE_DESTINATION}/ament_index/resource_index/packages")
+    # Install package.xml
+    install(FILES "${HAZEL_PACKAGE_XML}" DESTINATION "${HAZEL_PACKAGE_SHARE_DESTINATION}")
 endfunction()

@@ -17,7 +17,8 @@
 #
 ##############################################################################
 macro(hazel_project)
-    if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/package.xml")
+    set(HAZEL_PACKAGE_XML "${CMAKE_CURRENT_SOURCE_DIR}/package.xml")
+    if(NOT EXISTS "${HAZEL_PACKAGE_XML}")
         message(FATAL_ERROR "cannot find 'package.xml' in current source directory")
     endif()
     set(HAZEL_GENERATED_DIR "${CMAKE_CURRENT_BINARY_DIR}/hazel-generated")
