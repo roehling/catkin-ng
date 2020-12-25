@@ -37,6 +37,7 @@ def prepare_args(parser):
     parser.add_argument("-D", dest="cmake_defines", metavar="VAR[[:TYPE]=VALUE]", action="append", help="pass variable definitions to 'cmake'")
     parser.add_argument("--jobs", "-j", metavar="N", nargs="?", const=-1, type=int, help="number of parallel jobs")
     parser.add_argument("--keep-going", "-k", action="store_true", help="keep going even if some targets fail to build")
+    parser.add_argument("--target", action="append", help="build specific target")
     m = parser.add_mutually_exclusive_group()
     m.add_argument("--with-depends", action="store_true", help="also act on dependencies of packages specified with --pkg")
     m.add_argument("--without-depends", action="store_false", dest="with_depends", help="do not act on dependencies of packages specified with --pkg")
@@ -65,7 +66,7 @@ def build_package(path, args):
         find_prefix = argument.split("=")[0]
         for arg in argument_list:
             arg_prefix = arg.split("=")[0]
-            if arg_prefix == find_prefix:
+            if arg_prefix[2:] == find_prefix[2:]:
                 break
         else:
             argument_list.append(argument)
@@ -81,7 +82,7 @@ def build_package(path, args):
     if not os.path.isfile(os.path.join(pkgbuilddir, build_script)):
         cmake_args = [f"-S{pkgsrcdir}", f"-B{pkgbuilddir}"]
         if args.cmake_defines:
-            cmake_args += ["-D{arg}" for arg in args.cmake_defines]
+            cmake_args += [f"-D{arg}" for arg in args.cmake_defines]
         if args.use_ninja:
             cmake_args.append("-GNinja")
         add_default_arg(cmake_args, f"-DHAZEL_DEVEL_PREFIX={develdir}")
@@ -89,17 +90,24 @@ def build_package(path, args):
         add_default_arg(cmake_args, "-DBUILD_SHARED_LIBS=ON")
         execute_cmd(["cmake"] + cmake_args)
 
-    make_args = [f"-C{pkgbuilddir}", "-R", "-r"]
+    build_args = []
+    extra_args = []
+    for t in args.target or []:
+        build_args += ["--target", t]
     if args.jobs:
         if args.jobs < 0:
-            make_args.append("-j")
+            build_args.append("-j")
         elif args.jobs > 0:
-            make_args.append(f"-j{args.jobs}")
+            build_args.append(f"-j{args.jobs}")
+    
     if args.keep_going:
-        make_args.append("-k0" if args.use_ninja else "-k")
+        extra_args.append("-k0" if args.use_ninja else "-k")
     if args.extra:
-        make_args += args.extra
-    execute_cmd(["ninja" if args.use_ninja else "make"] + make_args)
+        extra_args += args.extra
+    if extra_args:
+        build_args.append("--")
+        build_args += extra_args
+    execute_cmd(["cmake", "--build", pkgbuilddir] + build_args)
 
 
 def run(args):

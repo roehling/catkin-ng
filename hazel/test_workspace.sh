@@ -24,7 +24,6 @@ pyver=$(python3 -c 'import sys; print(f"{sys.version_info.major}.{sys.version_in
 if [ "${KEEP_WS:-0}" -eq 1 ]
 then
     wsdir="/tmp/hazel_ws"
-    rm -rf "$wsdir"
     mkdir -p "$wsdir"
 else
     wsdir="$(mktemp -d)"
@@ -32,10 +31,10 @@ else
 fi
 
 mkdir -p "$wsdir/src"
-ln -s "$packagedir" "$wsdir/src/hazel"
+ln -sf "$packagedir" "$wsdir/src"
 for pkg in "$packagedir/test-packages/"*
 do
-    ln -s "$pkg" "$wsdir/src/${pkg##*/}"
+    ln -sf "$pkg" "$wsdir/src"
 done
 
 cd "$wsdir"
@@ -49,6 +48,6 @@ run()
         "$@"
 }
 
-run "$wsdir/src/hazel/bootstrap.sh" --pkg hazel VERBOSE=ON
-run hazel_make VERBOSE=ON
-run hazel_make install DESTDIR="$wsdir/install"
+run "$wsdir/src/hazel/bootstrap.sh" --pkg hazel "$@"
+run hazel_make "$@"
+run DESTDIR="$wsdir/install" hazel_make --target install "$@"
