@@ -1,9 +1,19 @@
-find_package(PkgConfig @arg_REQUIRED@ @arg_QUIET@)
+##############################################################################
+#
+# Hazel Build System
+# Copyright 2020 Timo Röhling <timo@gaussglocke.de>
+#
+# Copying and distribution of this file, with or without modification, are
+# permitted in any medium without royalty, provided the copyright notice and
+# this notice are preserved. This file is offered as-is, without any warranty.
+#
+##############################################################################
+find_package(PkgConfig @is_required@ @is_quiet@)
 if(PKG_CONFIG_FOUND)
-    pkg_search_module(@target@_pc @arg_REQUIRED@ @arg_QUIET@ @arg_UNPARSED_ARGUMENTS@)
+    pkg_search_module(@target@_pc @is_required@ @is_quiet@ @extra_args@)
     if(@target@_pc_FOUND)
-        add_library(pkg-config::@target@ INTERFACE IMPORTED)
-        set_target_properties(pkg-config::@target@ PROPERTIES
+        add_library(pkgconfig::@target@ INTERFACE IMPORTED)
+        set_target_properties(pkgconfig::@target@ PROPERTIES
             INTERFACE_INCLUDE_DIRECTORIES "${@target@_pc_INCLUDE_DIRS}"
             INTERFACE_LINK_LIBRARIES "${@target@_pc_LIBRARIES}"
             INTERFACE_LINK_DIRECTORIES "${@target@_pc_LIBRARY_DIRS}"

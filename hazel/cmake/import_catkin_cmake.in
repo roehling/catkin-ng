@@ -1,0 +1,22 @@
+##############################################################################
+#
+# Hazel Build System
+# Copyright 2020 Timo Röhling <timo@gaussglocke.de>
+#
+# Copying and distribution of this file, with or without modification, are
+# permitted in any medium without royalty, provided the copyright notice and
+# this notice are preserved. This file is offered as-is, without any warranty.
+#
+##############################################################################
+find_package(@target@ @is_required@ @is_quiet@ @extra_args@)
+if(@target@_FOUND_CATKIN_PROJECT)
+    add_library(catkin::@target@ INTERFACE IMPORTED)
+    set_target_properties(catkin::@target@ PROPERTIES
+        INTERFACE_INCLUDE_DIRECTORIES "${@target@_INCLUDE_DIRS}"
+        INTERFACE_LINK_LIBRARIES "${@target@_LIBRARIES}"
+    )
+else()
+    if(NOT "@is_required@" STREQUAL "")
+        message(FATAL_ERROR "Package '@target@' was found, but it is not a catkin package")
+    endif()
+endif()
