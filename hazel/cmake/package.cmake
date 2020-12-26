@@ -37,6 +37,18 @@ function(hazel_package)
     list(APPEND HAZEL_PACKAGE_EXPORTED_DEPENDS ${arg_DEPENDS})
     list(REMOVE_DUPLICATES HAZEL_PACKAGE_EXPORTED_DEPENDS)
 
+    # Special handling for pkg-config:: and catkin:: dependencies
+    set(special_depends "${HAZEL_PACKAGE_EXPORTED_DEPENDS}")
+    list(FILTER special_depends INCLUDE REGEX "^(pkg-config|catkin)::")
+    list(FILTER HAZEL_PACKAGE_EXPORTED_DEPENDS EXCLUDE REGEX "^(pkg-config|catkin)::")
+    foreach(target IN LISTS special_depends)
+        if(target MATCHES "^pkg-config::([^:]+)")
+            _hazel_export_cmake_scripts(${HAZEL_PACKAGE_IMPORT_PKGCONFIG_${CMAKE_MATCH_1}})
+        else()
+            message(SEND_ERROR "Cannot handle imported target '${target}' for package '${PROJECT_NAME}'")
+        endif()
+    endforeach()
+
     configure_file("${HAZEL_CMAKE_DIR}/package-config.context.in" "${HAZEL_GENERATED_DIR}/package-config.context" @ONLY)
     execute_process(COMMAND "${HAZEL_PYTHON_EXECUTABLE}" -m em -F "${HAZEL_GENERATED_DIR}/package-config.context" -o "${HAZEL_GENERATED_DIR}/package-config.cmake.in" "${HAZEL_CMAKE_DIR}/package-config.cmake.em")
     if(HAZEL_PACKAGE_ARCHITECTURE_INDEPENDENT)

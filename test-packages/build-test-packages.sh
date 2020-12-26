@@ -24,6 +24,10 @@ pyver=$(python3 -c 'import sys; print(f"{sys.version_info.major}.{sys.version_in
 if [ "${KEEP_WS:-0}" -eq 1 ]
 then
     wsdir="/tmp/hazel_ws"
+	if [ "${NOCLEAN_WS:-0}" -eq 0 ]
+	then
+		rm -rf "$wsdir"
+	fi
     mkdir -p "$wsdir"
 else
     wsdir="$(mktemp -d)"

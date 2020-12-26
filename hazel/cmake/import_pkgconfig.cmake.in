@@ -1,0 +1,13 @@
+find_package(PkgConfig @arg_REQUIRED@ @arg_QUIET@)
+if(PKG_CONFIG_FOUND)
+    pkg_search_module(@target@_pc @arg_REQUIRED@ @arg_QUIET@ @arg_UNPARSED_ARGUMENTS@)
+    if(@target@_pc_FOUND)
+        add_library(pkg-config::@target@ INTERFACE IMPORTED)
+        set_target_properties(pkg-config::@target@ PROPERTIES
+            INTERFACE_INCLUDE_DIRECTORIES "${@target@_pc_INCLUDE_DIRS}"
+            INTERFACE_LINK_LIBRARIES "${@target@_pc_LIBRARIES}"
+            INTERFACE_LINK_DIRECTORIES "${@target@_pc_LIBRARY_DIRS}"
+            INTERFACE_COMPILE_OPTIONS "${@target@_pc_CFLAGS_OTHER}"
+        )
+    endif()
+endif()

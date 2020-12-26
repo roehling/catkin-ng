@@ -50,6 +50,8 @@ set(cmake_files
     cmake/all.cmake
     cmake/destinations.cmake
     cmake/export.cmake
+    cmake/import_pkgconfig.cmake.in
+    cmake/import.cmake
     cmake/list_exported_targets.py
     cmake/package-config.cmake.em
     cmake/package-config.context.in

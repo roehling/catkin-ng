@@ -27,6 +27,7 @@ set(HAZEL_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 set(HAZEL_CMAKE_DIR "${CMAKE_CURRENT_LIST_DIR}")
 
 include("${HAZEL_CMAKE_DIR}/destinations.cmake")
+include("${HAZEL_CMAKE_DIR}/import.cmake")
 include("${HAZEL_CMAKE_DIR}/export.cmake")
 include("${HAZEL_CMAKE_DIR}/package.cmake")
 include("${HAZEL_CMAKE_DIR}/project.cmake")
