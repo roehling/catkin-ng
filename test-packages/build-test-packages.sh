@@ -31,10 +31,13 @@ else
 fi
 
 mkdir -p "$wsdir/src"
-ln -sf "$packagedir" "$wsdir/src"
-for pkg in "$packagedir/test-packages/"*
+ln -sf "$packagedir/../hazel" "$wsdir/src"
+for pkg in "$packagedir/"*
 do
-    ln -sf "$pkg" "$wsdir/src"
+	if [ -d "$pkg" ]
+	then
+		ln -sf "$pkg" "$wsdir/src"
+	fi
 done
 
 cd "$wsdir"
@@ -51,3 +54,4 @@ run()
 run "$wsdir/src/hazel/bootstrap.sh" --pkg hazel "$@"
 run hazel_make "$@"
 run DESTDIR="$wsdir/install" hazel_make --target install "$@"
+
