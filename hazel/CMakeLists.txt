@@ -69,4 +69,4 @@ foreach(file IN LISTS cmake_files)
     endif()
 endforeach()
 
-hazel_python_setup()
+hazel_python_setup(GLOBAL)

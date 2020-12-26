@@ -19,7 +19,6 @@
 ##############################################################################
 set -e
 packagedir=$(cd "$(dirname "$0")"; pwd)
-pyver=$(python3 -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}")')
 
 if [ "${KEEP_WS:-0}" -eq 1 ]
 then
@@ -51,7 +50,7 @@ run()
     env -i ROS_PYTHON_VERSION=3 LANG=C.UTF-8 \
         PATH="$wsdir/devel/bin:/usr/bin:/bin" \
         CMAKE_PREFIX_PATH="$wsdir/devel" \
-        PYTHONPATH="$wsdir/devel/lib/python$pyver/site-packages" \
+        PYTHONPATH="$wsdir/devel/lib/python3/dist-packages" \
         "$@"
 }
 

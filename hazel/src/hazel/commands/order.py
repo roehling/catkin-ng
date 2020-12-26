@@ -39,7 +39,7 @@ def run(args):
         packages.update({os.path.join(u, p): m for p, m in find_packages(u).items() if m.name not in workspace_packages})
 
     dependency_graph = create_dependency_graph(packages)
-    for level, tier in enumerate(packages_in_topological_order(dependency_graph, workspace_packages.keys())):
+    for level, tier in enumerate(packages_in_topological_order(dependency_graph, set(workspace_packages.keys()))):
         for name in tier:
             if args.only_folders:
                 print(workspace_packages[name])
