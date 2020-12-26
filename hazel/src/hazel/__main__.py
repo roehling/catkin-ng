@@ -1,3 +1,4 @@
+# encoding=utf-8
 ##############################################################################
 #
 # Hazel Build System
@@ -29,17 +30,17 @@ COMMANDS = {
 
 
 def main():
-    main_parser = argparse.ArgumentParser(prog=f"python{sys.version_info.major} -m hazel", description="hazel build system tool")
+    main_parser = argparse.ArgumentParser(prog="python{} -m hazel".format(sys.version_info.major), description="hazel build system tool")
     sub_parsers = main_parser.add_subparsers(dest="command", metavar="ACTION")
     sub_parsers.required = True
     for command, info in COMMANDS.items():
-        module = importlib.import_module(info.get("module", f".{command}"), "hazel.commands")
+        module = importlib.import_module(info.get("module", ".{}".format(command)), "hazel.commands")
         func = getattr(module, info.get("prepare_args", "prepare_args"))
         p = sub_parsers.add_parser(command, help=info.get("help", "undocumented action"))
         func(p)
     args = main_parser.parse_args()
     info = COMMANDS.get(args.command)
-    module = importlib.import_module(info.get("module", f".{args.command}"), "hazel.commands")
+    module = importlib.import_module(info.get("module", ".{}".format(args.command)), "hazel.commands")
     func = getattr(module, info.get("run", "run"))
     return func(args)
 

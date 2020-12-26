@@ -1,3 +1,4 @@
+# encoding=utf-8
 ##############################################################################
 #
 # Hazel Build System
@@ -57,7 +58,7 @@ def execute_cmd(args):
 
 def print_box(text):
     L = len(text)
-    box = "┌─" + ("─" * L) + f"─┒\n│ {text} ┃\n┕━" + ("━" * L) + "━┛"
+    box = "┌─" + ("─" * L) + "─┒\n│ {} ┃\n┕━".format(text) + ("━" * L) + "━┛"
     print(box)
 
 
@@ -80,12 +81,12 @@ def build_package(path, args):
     os.makedirs(pkgbuilddir, exist_ok=True)
 
     if not os.path.isfile(os.path.join(pkgbuilddir, build_script)):
-        cmake_args = [f"-S{pkgsrcdir}", f"-B{pkgbuilddir}"]
+        cmake_args = ["-S{}".format(pkgsrcdir), "-B{}".format(pkgbuilddir)]
         if args.cmake_defines:
-            cmake_args += [f"-D{arg}" for arg in args.cmake_defines]
+            cmake_args += ["-D{}".format(arg) for arg in args.cmake_defines]
         if args.use_ninja:
             cmake_args.append("-GNinja")
-        add_default_arg(cmake_args, f"-DHAZEL_DEVEL_PREFIX={develdir}")
+        add_default_arg(cmake_args, "-DHAZEL_DEVEL_PREFIX={}".format(develdir))
         add_default_arg(cmake_args, "-DCMAKE_BUILD_TYPE=RelWithDebInfo")
         add_default_arg(cmake_args, "-DBUILD_SHARED_LIBS=ON")
         execute_cmd(["cmake"] + cmake_args)
@@ -98,7 +99,7 @@ def build_package(path, args):
         if args.jobs < 0:
             build_args.append("-j")
         elif args.jobs > 0:
-            build_args.append(f"-j{args.jobs}")
+            build_args.append("-j{}".format(args.jobs))
 
     if args.keep_going:
         extra_args.append("-k0" if args.use_ninja else "-k")
@@ -113,11 +114,11 @@ def build_package(path, args):
 def run(args):
     args.directory = os.path.normpath(os.path.join(os.getcwd(), args.directory))
     if not os.path.isdir(args.directory):
-        sys.stderr.write(f"hazel_make: no such directory: {args.directory!r}\n")
+        sys.stderr.write("hazel_make: no such directory: {}\n".format(repr(args.directory)))
         return 1
     srcdir = os.path.join(args.directory, args.source)
     if not os.path.isdir(srcdir):
-        sys.stderr.write(f"hazel_make: no such directory: {srcdir!r}\n")
+        sys.stderr.write("hazel_make: no such directory: {}\n".format(repr(srcdir)))
         return 1
 
     packages = find_packages(srcdir)
@@ -137,7 +138,7 @@ def run(args):
                 try:
                     build_package(workspace_packages[name], args)
                 except subprocess.CalledProcessError as e:
-                    sys.stderr.write(f"hazel_make: process exited with return code {e.returncode}\n")
+                    sys.stderr.write("hazel_make: process exited with return code {}\n".format(e.returncode))
                     failed_packages.add(name)
                     returncode = max(returncode, e.returncode)
                     if not args.keep_going:

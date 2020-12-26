@@ -1,3 +1,4 @@
+# encoding=utf-8
 ##############################################################################
 #
 # Hazel Build System
@@ -45,9 +46,9 @@ def run(args):
             elif args.only_names:
                 print(name)
             elif args.with_level:
-                print(f"{level} {name} {workspace_packages[name]}")
+                print("{} {} {}".format(level, name, workspace_packages[name]))
             else:
-                print(f"{name} {workspace_packages[name]}")
+                print("{} {}".format(name, workspace_packages[name]))
 
 
 def main():

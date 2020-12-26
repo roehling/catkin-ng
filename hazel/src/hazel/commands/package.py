@@ -1,3 +1,4 @@
+# encoding=utf-8
 ##############################################################################
 #
 # Hazel Build System
@@ -18,7 +19,6 @@
 ##############################################################################
 import sys
 from catkin_pkg.package import parse_package
-from shlex import quote
 
 PROPERTIES = ["name", "version", "build_depends", "architecture_independent"]
 
@@ -33,30 +33,30 @@ def run(args):
     try:
         package = parse_package(args.source)
         if args.cmake:
-            prefix = "HAZEL_PACKAGE" if args.main else f"{package.name}"
+            prefix = "HAZEL_PACKAGE" if args.main else package.name
             output_cmake_property("HAZEL_PACKAGE_NAME", package.name)
-            output_cmake_property(f"{prefix}_VERSION", package.version)
-            output_cmake_property(f"{prefix}_MAINTAINER", package.maintainers)
-            output_cmake_property(f"{prefix}_PACKAGE_FORMAT", package.package_format)
-            output_cmake_property(f"{prefix}_BUILD_DEPENDS", package.build_depends)
-            output_cmake_property(f"{prefix}_BUILD_EXPORT_DEPENDS", package.build_export_depends)
-            output_cmake_property(f"{prefix}_BUILDTOOL_DEPENDS", package.buildtool_depends)
-            output_cmake_property(f"{prefix}_BUILDTOOL_EXPORT_DEPENDS", package.buildtool_export_depends)
-            output_cmake_property(f"{prefix}_EXEC_DEPENDS", package.exec_depends)
-            output_cmake_property(f"{prefix}_TEST_DEPENDS", package.test_depends)
-            output_cmake_property(f"{prefix}_DOC_DEPENDS", package.doc_depends)
-            output_cmake_property(f"{prefix}_ARCHITECTURE_INDEPENDENT", "TRUE" if next((e for e in package.exports if e.tagname == "architecture_independent"), None) else "FALSE")
+            output_cmake_property("{}_VERSION".format(prefix), package.version)
+            output_cmake_property("{}_MAINTAINER".format(prefix), package.maintainers)
+            output_cmake_property("{}_PACKAGE_FORMAT".format(prefix), package.package_format)
+            output_cmake_property("{}_BUILD_DEPENDS".format(prefix), package.build_depends)
+            output_cmake_property("{}_BUILD_EXPORT_DEPENDS".format(prefix), package.build_export_depends)
+            output_cmake_property("{}_BUILDTOOL_DEPENDS".format(prefix), package.buildtool_depends)
+            output_cmake_property("{}_BUILDTOOL_EXPORT_DEPENDS".format(prefix), package.buildtool_export_depends)
+            output_cmake_property("{}_EXEC_DEPENDS".format(prefix), package.exec_depends)
+            output_cmake_property("{}_TEST_DEPENDS".format(prefix), package.test_depends)
+            output_cmake_property("{}_DOC_DEPENDS".format(prefix), package.doc_depends)
+            output_cmake_property("{}_ARCHITECTURE_INDEPENDENT".format(prefix), "TRUE" if next((e for e in package.exports if e.tagname == "architecture_independent"), None) else "FALSE")
             return 0
-        sys.stderr.write("not implemented")
+        sys.stderr.write("not implemented\n")
         return 1
     except Exception as e:
-        sys.stderr.write(f"failed to parse package: {str(e)}\n")
+        sys.stderr.write("failed to parse package: {}\n".format(str(e)))
         return 1
 
 
 def output_cmake_property(name, value):
     if isinstance(value, list) or isinstance(value, tuple):
         list_value = ";".join(str(v) for v in value)
-        print(f"set({name} \"{list_value}\")")
+        print("set({} \"{}\")".format(name, list_value))
     else:
-        print(f"set({name} \"{value}\")")
+        print("set({} \"{}\")".format(name, value))
