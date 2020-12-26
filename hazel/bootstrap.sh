@@ -1,7 +1,7 @@
 #!/bin/bash
 ##############################################################################
 #
-# hazel
+# Hazel Build System
 # Copyright 2020 Timo Röhling <timo@gaussglocke.de>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");

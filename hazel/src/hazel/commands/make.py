@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# hazel
+# Hazel Build System
 # Copyright 2020 Timo Röhling <timo@gaussglocke.de>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -99,7 +99,7 @@ def build_package(path, args):
             build_args.append("-j")
         elif args.jobs > 0:
             build_args.append(f"-j{args.jobs}")
-    
+
     if args.keep_going:
         extra_args.append("-k0" if args.use_ninja else "-k")
     if args.extra:
