@@ -40,6 +40,8 @@ if(HAZEL_DEVEL_PREFIX)
     )
 endif()
 
+add_subdirectory(docs)
+
 install(FILES
         "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
         "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
