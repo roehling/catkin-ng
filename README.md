@@ -1,5 +1,56 @@
-hazel
-=====
+Hazel Build System
+==================
 
-Hazel is an experimental build system designed as successor for catkin.
-The project is still in the proof-of-concept stage, so do not use this in production!
+Hazel is a successor for the ROS catkin build system. Its design follows the
+[Modern CMake](https://cliutils.gitlab.io/modern-cmake/) principles. In particular,
+it uses the available CMake facilities for target import and export. 
+Hazel tries very hard not to mess with CMake's dependency management, so you will
+not see any manually constructed `catkin_LIBRARIES` or `catkin_INCLUDE_DIRS`variables:
+everything is a target. CMake scripts written for Hazel are pretty much regular CMake
+scripts, with a few helpful macros to reduce boilerplate code:
+
+
+```cmake
+cmake_minimum_required(VERSION 3.14)  # Hazel needs CMake 3.14+
+
+project(foo VERSION 1.2.3)
+
+# Hazel
+find_package(hazel REQUIRED)
+
+# Build dependencies
+find_package(bar REQUIRED)                          # another Hazel package
+find_package(Boost REQUIRED COMPONENTS filesystem)  # system library
+
+# Build a library
+add_library(foo src/libfoo.cpp)
+# Link against dependencies. This will also take care of include paths and
+# other required settings.
+target_link_libraries(foo
+    PUBLIC bar::bar
+    PRIVATE Boost::filesystem
+)
+target_include_directories(foo
+    PUBLIC
+        # BUILD_INTERFACE is for the build itself and the develspace
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        # INSTALL_INTERFACE is relative to CMAKE_INSTALL_PREFIX
+        $<INSTALL_INTERFACE:include>
+)
+
+# Install public headers
+install(DIRECTORY include/foo DESTINATION include)
+
+# Build a program that uses the library
+add_executable(foo-cli src/cli.cpp)
+target_link_libraries(foo-cli
+    PRIVATE foo
+)
+
+# Export the library so other packages can use it
+# Hazel is smart enough to install foo and figure out that you need the
+# Hazel package bar as transitive dependency.
+hazel_package(TARGETS foo)
+```
+
+Note that Hazel is still in the pre-alpha stage and not yet meant for production use.
