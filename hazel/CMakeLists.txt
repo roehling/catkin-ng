@@ -46,27 +46,9 @@ install(FILES
     DESTINATION "${HAZEL_PACKAGE_CMAKE_DESTINATION}"
 )
 
-set(cmake_files
-    cmake/all.cmake
-    cmake/destinations.cmake
-    cmake/export.cmake
-    cmake/import_pkgconfig.cmake.in
-    cmake/import.cmake
-    cmake/list_exported_targets.py
-    cmake/package-config.cmake.em
-    cmake/package-config.context.in
-    cmake/package.cmake
-    cmake/project.cmake
-    cmake/python.cmake
-    cmake/script.context.in
-    cmake/status.cmake
-)
-
-foreach(file IN LISTS cmake_files)
-    install(FILES ${file} DESTINATION "${HAZEL_PACKAGE_CMAKE_DESTINATION}")
-    if(HAZEL_DEVEL_PREFIX)
-        file(COPY ${file} DESTINATION "${HAZEL_DEVEL_PREFIX}/${HAZEL_PACKAGE_CMAKE_DESTINATION}")
-    endif()
-endforeach()
+install(DIRECTORY cmake/ DESTINATION "${HAZEL_PACKAGE_CMAKE_DESTINATION}")
+if(HAZEL_DEVEL_PREFIX)
+    file(COPY cmake/ DESTINATION "${HAZEL_DEVEL_PREFIX}/${HAZEL_PACKAGE_CMAKE_DESTINATION}")
+endif()
 
 hazel_python_setup(GLOBAL)
