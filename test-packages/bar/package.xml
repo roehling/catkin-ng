@@ -9,4 +9,7 @@
     <maintainer email="timo@gaussglocke.de">Timo Röhling</maintainer>
     <buildtool_depend>hazel</buildtool_depend>
     <depend>foo</depend>
+    <export>
+        <build_type>hazel</build_type>
+    </export>
 </package>

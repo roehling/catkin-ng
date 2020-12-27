@@ -10,4 +10,7 @@
     <buildtool_depend>hazel</buildtool_depend>
     <depend>foo</depend>
     <depend>bar</depend>
+    <export>
+        <build_type>hazel</build_type>
+    </export>
 </package>

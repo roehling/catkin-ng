@@ -6,9 +6,10 @@
     <description>Hazel Build System for ROS</description>
     <license>Apache-2.0</license>
     <author>Timo Röhling</author>
-    <maintainer email="timo.roehling@fkie.fraunhofer.de">Timo Röhling</maintainer>
+    <maintainer email="timo@gaussglocke.de">Timo Röhling</maintainer>
     <buildtool_depend>cmake</buildtool_depend>
     <export>
         <architecture_independent/>
+        <build_type>hazel</build_type>
     </export>
 </package>

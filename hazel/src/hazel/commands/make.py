@@ -62,35 +62,30 @@ def print_box(text):
     print(box)
 
 
-def build_package(path, args):
-    def add_default_arg(argument_list, argument):
-        find_prefix = argument.split("=")[0]
-        for arg in argument_list:
-            arg_prefix = arg.split("=")[0]
-            if arg_prefix[2:] == find_prefix[2:]:
-                break
-        else:
-            argument_list.append(argument)
+def add_default_arg(argument_list, argument):
+    find_prefix = argument.split("=")[0]
+    for arg in argument_list:
+        arg_prefix = arg.split("=")[0]
+        if arg_prefix[2:] == find_prefix[2:]:
+            break
+    else:
+        argument_list.append(argument)
 
-    pkgsrcdir = os.path.join(args.directory, args.source, path)
-    pkgbuilddir = os.path.join(args.directory, args.build, path)
-    develdir = os.path.join(args.directory, args.devel)
-    build_script = "build.ninja" if args.use_ninja else "Makefile"
-    if args.pre_clean:
-        shutil.rmtree(pkgbuilddir, ignore_errors=True)
-    os.makedirs(pkgbuilddir, exist_ok=True)
 
-    if not os.path.isfile(os.path.join(pkgbuilddir, build_script)):
-        cmake_args = ["-S{}".format(pkgsrcdir), "-B{}".format(pkgbuilddir)]
-        if args.cmake_defines:
-            cmake_args += ["-D{}".format(arg) for arg in args.cmake_defines]
-        if args.use_ninja:
-            cmake_args.append("-GNinja")
-        add_default_arg(cmake_args, "-DHAZEL_DEVEL_PREFIX={}".format(develdir))
-        add_default_arg(cmake_args, "-DCMAKE_BUILD_TYPE=RelWithDebInfo")
-        add_default_arg(cmake_args, "-DBUILD_SHARED_LIBS=ON")
-        execute_cmd(["cmake"] + cmake_args)
+def common_cmake_args(context):
+    args = context["args"]
+    cmake_args = ["-S{}".format(context["pkgsrcdir"]), "-B{}".format(context["pkgbuilddir"])]
+    if args.cmake_defines:
+        cmake_args += ["-D{}".format(arg) for arg in args.cmake_defines]
+    if args.use_ninja:
+        cmake_args.append("-GNinja")
+    add_default_arg(cmake_args, "-DCMAKE_BUILD_TYPE=RelWithDebInfo")
+    add_default_arg(cmake_args, "-DBUILD_SHARED_LIBS=ON")
+    return cmake_args
 
+
+def common_build_args(context):
+    args = context["args"]
     build_args = []
     extra_args = []
     for t in args.target or []:
@@ -108,7 +103,59 @@ def build_package(path, args):
     if extra_args:
         build_args.append("--")
         build_args += extra_args
-    execute_cmd(["cmake", "--build", pkgbuilddir] + build_args)
+    return build_args
+
+
+def build_cmake_package(context):
+    if not os.path.isfile(os.path.join(context["pkgbuilddir"], context["build_script"])):
+        cmake_args = common_cmake_args(context)
+        add_default_arg(cmake_args, "-DCMAKE_INSTALL_PREFIX={}".format(context["develdir"]))
+        execute_cmd(["cmake"] + cmake_args)
+
+    build_args = common_build_args(context)
+    if not context["args"].targets or "install" not in context["args"].targets:
+        build_args = ["--target", "install"] + build_args
+    execute_cmd(["cmake", "--build", context["pkgbuilddir"]] + build_args)
+
+
+def build_catkin_package(context):
+    if not os.path.isfile(os.path.join(context["pkgbuilddir"], context["build_script"])):
+        cmake_args = common_cmake_args(context)
+        add_default_arg(cmake_args, "-DCATKIN_DEVEL_PREFIX={}".format(context["develdir"]))
+        execute_cmd(["cmake"] + cmake_args)
+
+    build_args = common_build_args(context)
+    execute_cmd(["cmake", "--build", context["pkgbuilddir"]] + build_args)
+
+
+def build_hazel_package(context):
+    if not os.path.isfile(os.path.join(context["pkgbuilddir"], context["build_script"])):
+        cmake_args = common_cmake_args(context)
+        add_default_arg(cmake_args, "-DHAZEL_DEVEL_PREFIX={}".format(context["develdir"]))
+        execute_cmd(["cmake"] + cmake_args)
+
+    build_args = common_build_args(context)
+    execute_cmd(["cmake", "--build", context["pkgbuilddir"]] + build_args)
+
+
+def build_package(path, manifest, args):
+    pkgsrcdir = os.path.join(args.directory, args.source, path)
+    pkgbuilddir = os.path.join(args.directory, args.build, path)
+    develdir = os.path.join(args.directory, args.devel)
+    build_script = "build.ninja" if args.use_ninja else "Makefile"
+    if args.pre_clean:
+        shutil.rmtree(pkgbuilddir, ignore_errors=True)
+    os.makedirs(pkgbuilddir, exist_ok=True)
+    context = {"manifest": manifest, "pkgsrcdir": pkgsrcdir, "develdir": develdir, "pkgbuilddir": pkgbuilddir, "args": args, "build_script": build_script}
+    build_type = manifest.get_build_type()
+    if build_type == "cmake":
+        build_cmake_package(context)
+    elif build_type == "catkin":
+        build_catkin_package(context)
+    elif build_type == "hazel":
+        build_hazel_package(context)
+    else:
+        raise ValueError("unknown build type '{}'".format(build_type))
 
 
 def run(args):
@@ -136,13 +183,17 @@ def run(args):
                 print("*** Cannot be built because of previous failures")
             else:
                 try:
-                    build_package(workspace_packages[name], args)
+                    build_package(workspace_packages[name], packages[workspace_packages[name]], args)
                 except subprocess.CalledProcessError as e:
                     sys.stderr.write("hazel_make: process exited with return code {}\n".format(e.returncode))
                     failed_packages.add(name)
                     returncode = max(returncode, e.returncode)
                     if not args.keep_going:
                         return returncode
+                except Exception as e:
+                    sys.stderr.write("hazel_make: cannot build package: {}\n".format(str(e)))
+                    failed_packages.add(name)
+                    returncode = max(returncode, 1)
     return returncode
 
 
