@@ -35,7 +35,7 @@ endif()
 
 set(@@PROJECT_NAME@@_IS_HAZEL_PACKAGE TRUE)
 set(@@PROJECT_NAME@@_HAZEL_VERSION "@@HAZEL_VERSION@@")
-set(@@PROJECT_NAME@@_EXPORTED_TARGETS)
+set(@@PROJECT_NAME@@_TARGETS)
 
 @[if EXPORTED_DEPENDS]@
 include(CMakeFindDependencyMacro)
@@ -52,14 +52,14 @@ include("${CMAKE_CURRENT_LIST_DIR}/@(inc).cmake")
 find_package(Python REQUIRED QUIET COMPONENTS Interpreter)
 execute_process(COMMAND "${Python_EXECUTABLE}" "${CMAKE_CURRENT_LIST_DIR}/list_exported_targets.py"
     @(" ".join("\"${CMAKE_CURRENT_LIST_DIR}/%s.cmake\"" % f for f in EXPORTED_TARGET_FILES))
-    OUTPUT_VARIABLE @@PROJECT_NAME@@_EXPORTED_TARGETS OUTPUT_STRIP_TRAILING_WHITESPACE)
+    OUTPUT_VARIABLE @@PROJECT_NAME@@_TARGETS OUTPUT_STRIP_TRAILING_WHITESPACE)
 
 @[end if]@
 list(APPEND HAZEL_IMPORTED_PACKAGES "@@PROJECT_NAME@@")
 
 if(NOT @@PROJECT_NAME@@_FIND_QUIETLY)
 @[if EXPORTED_TARGET_FILES]@
-    list(LENGTH @@PROJECT_NAME@@_EXPORTED_TARGETS target_count)
+    list(LENGTH @@PROJECT_NAME@@_TARGETS target_count)
     message(STATUS "Found @@PROJECT_NAME@@: ${PACKAGE_PREFIX_DIR} (found version \"@@PROJECT_VERSION@@\") imported targets: ${target_count}")
 @[else]@
     message(STATUS "Found @@PROJECT_NAME@@: ${PACKAGE_PREFIX_DIR} (found version \"@@PROJECT_VERSION@@\")")
