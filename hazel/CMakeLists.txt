@@ -19,6 +19,8 @@
 cmake_minimum_required(VERSION 3.14)
 project(hazel)
 
+option(BUILD_DOCS "Build and install Sphinx documentation" ON)
+
 include(cmake/all.cmake)
 include(CMakePackageConfigHelpers)
 
@@ -40,7 +42,9 @@ if(HAZEL_DEVEL_PREFIX)
     )
 endif()
 
-add_subdirectory(docs)
+if(BUILD_DOCS)
+    add_subdirectory(docs)
+endif()
 
 install(FILES
         "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"

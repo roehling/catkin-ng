@@ -34,4 +34,6 @@ if(SPHINXBUILD)
     install(DIRECTORY "${SPHINX_BUILDDIR}/html" DESTINATION ${HAZEL_PACKAGE_DOC_DESTINATION}
         PATTERN ".*" EXCLUDE
     )
+else()
+    message(WARNING "sphinx-build not found. Documentation will not be built.")
 endif()

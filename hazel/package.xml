@@ -8,6 +8,8 @@
     <author>Timo Röhling</author>
     <maintainer email="timo@gaussglocke.de">Timo Röhling</maintainer>
     <buildtool_depend>cmake</buildtool_depend>
+    <doc_depend condition="$ROS_PYTHON_VERSION == 2">python-sphinx</doc_depend>
+    <doc_depend condition="$ROS_PYTHON_VERSION == 3">python3-sphinx</doc_depend>
     <export>
         <architecture_independent/>
         <build_type>hazel</build_type>
