@@ -20,8 +20,6 @@
 import sys
 from catkin_pkg.package import parse_package
 
-PROPERTIES = ["name", "version", "build_depends", "architecture_independent"]
-
 
 def prepare_args(parser):
     parser.add_argument("--source", metavar="DIR", default=".", help="package source directory")
