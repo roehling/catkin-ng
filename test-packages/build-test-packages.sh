@@ -48,13 +48,13 @@ cd "$wsdir"
 run()
 {
     env -i ROS_PYTHON_VERSION=3 LANG=C.UTF-8 \
-        PATH="$wsdir/devel/bin:/usr/bin:/bin" \
-        CMAKE_PREFIX_PATH="$wsdir/devel" \
-        PYTHONPATH="$wsdir/devel/lib/python3/dist-packages" \
+        PATH="$wsdir/devel/bin:$PATH" \
+        HAZEL_PREFIX_PATH="$wsdir/devel" \
+        CMAKE_PREFIX_PATH="$CMAKE_PREFIX_PATH" \
+        PYTHONPATH="$wsdir/devel/lib/python3/dist-packages:$PYTHONPATH" \
         "$@"
 }
 
 run "$wsdir/src/hazel/bootstrap.sh" --pkg hazel "$@"
 run hazel_make "$@"
 run DESTDIR="$wsdir/install" hazel_make --target install "$@"
-
