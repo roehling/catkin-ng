@@ -3,7 +3,7 @@ project(baz)
 
 find_package(hazel REQUIRED)
 
-hazel_import(catkin::catkin_example)
+hazel_import(catkin::catkin_example REQUIRED)
 
 add_library(baz src/libbaz.cpp)
 target_include_directories(baz PUBLIC
