@@ -50,8 +50,8 @@ include("${CMAKE_CURRENT_LIST_DIR}/@(inc).cmake")
 
 @[if EXPORTED_TARGET_FILES]@
 find_package(Python REQUIRED QUIET COMPONENTS Interpreter)
-execute_process(COMMAND "${Python_EXECUTABLE}" "${CMAKE_CURRENT_LIST_DIR}/list_exported_targets.py"
-    @(" ".join("\"${CMAKE_CURRENT_LIST_DIR}/%s.cmake\"" % f for f in EXPORTED_TARGET_FILES))
+execute_process(WORKING_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}" COMMAND "${Python_EXECUTABLE}" "list_exported_targets.py"
+    @(" ".join("\"%s.cmake\"" % f for f in EXPORTED_TARGET_FILES))
     OUTPUT_VARIABLE @@PROJECT_NAME@@_TARGETS OUTPUT_STRIP_TRAILING_WHITESPACE)
 
 @[end if]@

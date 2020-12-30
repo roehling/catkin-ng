@@ -27,7 +27,7 @@ from catkin_tools.execution.jobs import Job
 from catkin_tools.execution.stages import CommandStage
 from catkin_tools.execution.stages import FunctionStage
 
-from catkin_tools.jobs.catkin import link_devel_products, create_catkin_clean_job
+from catkin_tools.jobs.catkin import link_devel_products, create_catkin_clean_job as create_hazel_clean_job
 
 from catkin_tools.jobs.commands.cmake import CMAKE_EXEC
 from catkin_tools.jobs.commands.cmake import CMakeIOBufferProtocol
@@ -187,5 +187,5 @@ description = {
     "build_type": "hazel",
     "description": "builds a package with the 'hazel' build type",
     "create_build_job": create_hazel_build_job,
-    "create_clean_job": create_catkin_clean_job,
+    "create_clean_job": create_hazel_clean_job,
 }
