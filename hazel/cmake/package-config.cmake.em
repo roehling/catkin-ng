@@ -29,32 +29,39 @@
 ##############################################################################
 @@PACKAGE_INIT@@
 
-if(@@PROJECT_NAME@@_FOUND AND "@@PROJECT_NAME@@" IN_LIST HAZEL_IMPORTED_PACKAGES)
+@# Prevent circular dependencies leading into an infinite loop
+if(@@PROJECT_NAME@@_FOUND)
     return()
 endif()
 
 set(@@PROJECT_NAME@@_IS_HAZEL_PACKAGE TRUE)
 set(@@PROJECT_NAME@@_HAZEL_VERSION "@@HAZEL_VERSION@@")
 set(@@PROJECT_NAME@@_TARGETS)
+set(@@PROJECT_NAME@@_FOUND TRUE)
 
 @[if EXPORTED_DEPENDS]@
 include(CMakeFindDependencyMacro)
 @[for dep in EXPORTED_DEPENDS]@
 find_dependency(@dep)
 @[end for]@
-
 @[end if]@
+
 @[for inc in EXPORTED_CMAKE_FILES]@
 include("${CMAKE_CURRENT_LIST_DIR}/@(inc).cmake")
 @[end for]@
+
+if(NOT @@PROJECT_NAME@@_FOUND)
+    return()
+endif()
 
 @[if EXPORTED_TARGET_FILES]@
 find_package(Python REQUIRED QUIET COMPONENTS Interpreter)
 execute_process(WORKING_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}" COMMAND "${Python_EXECUTABLE}" "list_exported_targets.py"
     @(" ".join("\"%s.cmake\"" % f for f in EXPORTED_TARGET_FILES))
-    OUTPUT_VARIABLE @@PROJECT_NAME@@_TARGETS OUTPUT_STRIP_TRAILING_WHITESPACE)
-
+    OUTPUT_VARIABLE @@PROJECT_NAME@@_DISCOVERED_TARGETS OUTPUT_STRIP_TRAILING_WHITESPACE)
+list(APPEND @@PROJECT_NAME@@_TARGETS ${@@PROJECT_NAME@@_DISCOVERED_TARGETS})
 @[end if]@
+
 list(APPEND HAZEL_IMPORTED_PACKAGES "@@PROJECT_NAME@@")
 
 if(NOT @@PROJECT_NAME@@_FIND_QUIETLY)
@@ -65,7 +72,6 @@ if(NOT @@PROJECT_NAME@@_FIND_QUIETLY)
     message(STATUS "Found @@PROJECT_NAME@@: ${PACKAGE_PREFIX_DIR} (found version \"@@PROJECT_VERSION@@\")")
 @[end if]@
 endif()
-set(@@PROJECT_NAME@@_FOUND TRUE)
 
 if(DEFINED HAZEL_PACKAGE_NAME AND NOT "@@PROJECT_NAME@@" IN_LIST HAZEL_PACKAGE_BUILD_DEPENDS)
     message(AUTHOR_WARNING "Package '${HAZEL_PACKAGE_NAME}' does not declare its build_depend on '@@PROJECT_NAME@@'")

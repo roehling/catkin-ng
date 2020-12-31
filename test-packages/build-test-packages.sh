@@ -55,6 +55,6 @@ run()
         "$@"
 }
 
-run "$wsdir/src/hazel/bootstrap.sh" --pkg hazel "$@"
+run "$wsdir/src/hazel/bootstrap.sh" --pkg hazel
 run hazel_make "$@"
 run DESTDIR="$wsdir/install" hazel_make --target install "$@"

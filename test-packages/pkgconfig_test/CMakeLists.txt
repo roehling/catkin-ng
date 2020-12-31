@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.14)
-project(pkgconfig-test)
+project(pkgconfig_test)
 
 find_package(hazel REQUIRED)
 hazel_import(pkgconfig::png libpng>=1.6 REQUIRED)
