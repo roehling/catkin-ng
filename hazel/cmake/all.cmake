@@ -31,6 +31,7 @@ include("${HAZEL_CMAKE_DIR}/import.cmake")
 include("${HAZEL_CMAKE_DIR}/package.cmake")
 include("${HAZEL_CMAKE_DIR}/paths.cmake")
 include("${HAZEL_CMAKE_DIR}/project.cmake")
+include("${HAZEL_CMAKE_DIR}/properties.cmake")
 include("${HAZEL_CMAKE_DIR}/python.cmake")
 include("${HAZEL_CMAKE_DIR}/status.cmake")
 

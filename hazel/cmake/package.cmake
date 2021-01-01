@@ -34,12 +34,20 @@ function(hazel_package)
 
     hazel_export(EXPORT "${arg_EXPORT}" NAMESPACE "${arg_NAMESPACE}" FILE "${PROJECT_NAME}Targets" TARGETS ${arg_TARGETS} CMAKE_SCRIPTS ${arg_CMAKE_SCRIPTS})
 
+    hazel_get_property(
+        HAZEL_PACKAGE_EXPORTED_CMAKE_FILES
+        HAZEL_PACKAGE_EXPORTED_DEPENDS
+        HAZEL_PACKAGE_EXPORTED_TARGET_FILES
+        HAZEL_PACKAGE_IMPORTED_TARGETS
+    )
+
     list(APPEND HAZEL_PACKAGE_EXPORTED_DEPENDS ${arg_DEPENDS})
     list(REMOVE_DUPLICATES HAZEL_PACKAGE_EXPORTED_DEPENDS)
 
     set(regular_depends)
     foreach(dep IN LISTS HAZEL_PACKAGE_EXPORTED_DEPENDS)
         if(dep IN_LIST HAZEL_PACKAGE_IMPORTED_TARGETS AND dep MATCHES "(.+)::(.+)")
+            hazel_get_property(HAZEL_PACKAGE_IMPORT_FILE_${CMAKE_MATCH_1}_${CMAKE_MATCH_2})
             _hazel_export_cmake_scripts(${HAZEL_PACKAGE_IMPORT_FILE_${CMAKE_MATCH_1}_${CMAKE_MATCH_2}})
         else()
             list(APPEND regular_depends "${dep}")

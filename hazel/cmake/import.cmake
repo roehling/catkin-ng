@@ -16,8 +16,6 @@
 # limitations under the License.
 #
 ##############################################################################
-set(HAZEL_PACKAGE_IMPORTED_TARGETS)
-
 function(hazel_import target)
     cmake_parse_arguments(arg "REQUIRED;QUIET" "" "" ${ARGN})
     if(arg_REQUIRED)
@@ -37,11 +35,14 @@ function(hazel_import target)
         set(HAZEL_GENERATED_DIR "${CMAKE_CURRENT_BINARY_DIR}/hazel-generated")
         file(MAKE_DIRECTORY "${HAZEL_GENERATED_DIR}")
         set(GENERATED_CONFIG "${HAZEL_GENERATED_DIR}/__import_${type}_${target}.cmake")
-        configure_file("${HAZEL_CMAKE_DIR}/import_${type}.cmake.in" "${GENERATED_CONFIG}" @ONLY)
-        include("${GENERATED_CONFIG}")
-        set(HAZEL_PACKAGE_IMPORT_FILE_${type}_${target} "${GENERATED_CONFIG}" PARENT_SCOPE)
-        list(APPEND HAZEL_PACKAGE_IMPORTED_TARGETS "${type}::${target}")
-        set(HAZEL_PACKAGE_IMPORTED_TARGETS "${HAZEL_PACKAGE_IMPORTED_TARGETS}" PARENT_SCOPE)
+        if(NOT EXISTS "${GENERATED_CONFIG}")
+            configure_file("${HAZEL_CMAKE_DIR}/import_${type}.cmake.in" "${GENERATED_CONFIG}" @ONLY)
+            include("${GENERATED_CONFIG}")
+            hazel_set_property(HAZEL_PACKAGE_IMPORT_FILE_${type}_${target} "${GENERATED_CONFIG}")
+            hazel_append_property(HAZEL_PACKAGE_IMPORTED_TARGETS "${type}::${target}")
+        else()
+            message(FATAL_ERROR "hazel_import: duplicate import of target '${target}'")
+        endif()
     else()
         message(SEND_ERROR "hazel_import: invalid target '${target}'. Supported targets are in the format \"TYPE::NAME\". NAME must be a valid identifier with the characters A-Z, 0-9, underscore or dash. TYPE must be one of the supported import types: pkgconfig, catkin")
     endif()
