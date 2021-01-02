@@ -8,7 +8,7 @@
 # this notice are preserved. This file is offered as-is, without any warranty.
 #
 ##############################################################################
-find_package(@target@ @is_required@ @is_quiet@ @extra_args@)
+find_package(@target@ @target_version@ @is_required@ @is_quiet@ @extra_args@)
 if(@target@_FOUND_AMENT_PROJECT)
     if(@target@_TARGETS)
         add_library(ament::@target@ INTERFACE IMPORTED)
@@ -24,7 +24,7 @@ if(@target@_FOUND_AMENT_PROJECT)
         )
     endif()
 else()
-    if(NOT "@is_required@" STREQUAL "")
+    if(@target@_FOUND AND NOT "@is_required@" STREQUAL "")
         message(FATAL_ERROR "package '@target@' was found, but it is not an ament package")
     endif()
 endif()

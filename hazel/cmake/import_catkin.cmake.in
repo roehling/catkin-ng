@@ -8,7 +8,7 @@
 # this notice are preserved. This file is offered as-is, without any warranty.
 #
 ##############################################################################
-find_package(@target@ @is_required@ @is_quiet@ @extra_args@)
+find_package(@target@ @target_version@ @is_required@ @is_quiet@ @extra_args@)
 if(@target@_FOUND_CATKIN_PROJECT)
     add_library(catkin::@target@ INTERFACE IMPORTED)
     set_target_properties(catkin::@target@ PROPERTIES
@@ -16,7 +16,7 @@ if(@target@_FOUND_CATKIN_PROJECT)
         INTERFACE_LINK_LIBRARIES "${@target@_LIBRARIES}"
     )
 else()
-    if(NOT "@is_required@" STREQUAL "")
+    if(@target@_FOUND AND NOT "@is_required@" STREQUAL "")
         message(FATAL_ERROR "package '@target@' was found, but it is not a catkin package")
     endif()
 endif()
