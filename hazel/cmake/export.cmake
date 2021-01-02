@@ -16,8 +16,6 @@
 # limitations under the License.
 #
 ##############################################################################
-set(HAZEL_PACKAGE_EXPORTED_TARGET_FILES)
-
 function(hazel_export)
     cmake_parse_arguments(arg "" "EXPORT;FILE;NAMESPACE" "TARGETS;CMAKE_SCRIPTS" ${ARGN})
     if(arg_UNPARSED_ARGUMENTS)
