@@ -91,7 +91,7 @@ The following options are available:
     The ``DEPENDS`` option accepts a list of all packages which need to be
     found and their targets imported for your exported targets to work. You can
     also request a particular version and/or package components just as you
-    would with the :cmake:command:`find_package` command, e.g. ``"Boost 1.70
+    would with the :cmake:command:`find_package` command, e.g. ``"Boost
     COMPONENTS system"``. In that case, you must also use quotes to protect the
     whitespaces in the dependency string.
 

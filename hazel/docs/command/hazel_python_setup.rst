@@ -56,6 +56,6 @@ your Python packages are in the ``src`` subdirectory, a minimal working
     )
 
 Hazel also supports ``setup.cfg`` configuration files. However, Hazel does not
-support `PEP 517`_ style builds, i.e. packages without ``setup.py``.
+support `PEP 517`_ style builds, i.e., packages without ``setup.py``.
 
 .. _PEP 517: https://www.python.org/dev/peps/pep-0517/

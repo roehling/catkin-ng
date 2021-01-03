@@ -46,9 +46,9 @@ modules.
 .. rubric:: Footnotes
 
 .. [#f1]
-    Starting with ROS Foxy, ament began to adopt a target-oriented CMake
-    approach, but targets are far from being a first-class citizen in the ROS
-    ecosystem yet.
+    Starting with ROS Foxy, ament added support for a target-oriented CMake
+    approach, but as of this writing, targets are far from being a first-class
+    citizen in the ROS ecosystem.
 
 .. toctree::
     :maxdepth: 2
