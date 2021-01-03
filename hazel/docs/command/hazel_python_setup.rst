@@ -21,26 +21,30 @@ Install Python modules.
 .. code-block:: cmake
 
     hazel_python_setup(
-        [GLOBAL]
-        [SRCDIR <srcdir>]
+        [DIRECTORY <srcdir>]
+        [GLOBAL_SCRIPTS]
     )
 
 The ``hazel_python_setup()`` command ensures that the ``setup.py`` of a wrapped
 Python package is invoked at build time and installs to the correct locations.
 
-When the ``GLOBAL`` option is given, Python scripts will be installed to the
-global ``<prefix>/bin`` directory. By default, Python scripts will be installed
-to the package-specific ``<prefix>/lib/<package>`` directory, where they can be
-found by ``rosrun`` or ``ros2 run``.
-
-You should avoid polluting the global namespace with scripts unless they are
-independently useful and not specific to your package. Also, their name should
-not collide with system binaries.
-
-The ``SRCDIR`` option specifies the source location of ``setup.py`` if it is
+The ``DIRECTORY`` option specifies the source location of ``setup.py`` if it is
 not in the same location as the ``CMakeLists.txt`` that calls
 ``hazel_python_setup()``. Relative paths are interpreted relative to
 :cmake:variable:`CMAKE_CURRENT_SOURCE_DIR`.
+
+When the ``GLOBAL_SCRIPTS`` option is given, Python scripts will be installed
+to the global ``<prefix>/bin`` directory. By default, Python scripts will be
+installed to the package-specific ``<prefix>/lib/<package>`` directory, where
+they can be found by ``rosrun`` or ``ros2 run``.
+
+You should avoid polluting the global namespace with scripts unless they are
+essential for the ROS ecosystem and used frequently enough to warrant the
+global visibility. Of course, their names must not collide with system
+binaries.
+
+setuptools
+----------
 
 Hazel provides a setuptools wrapper to automatically add metadata from the
 ``package.xml`` to the Python package manifest. Assuming that the sources for
@@ -56,6 +60,7 @@ your Python packages are in the ``src`` subdirectory, a minimal working
     )
 
 Hazel also supports ``setup.cfg`` configuration files. However, Hazel does not
-support `PEP 517`_ style builds, i.e., packages without ``setup.py``.
+support pure `PEP 517`_ style builds, you must have a ``setup.py`` even if it
+does nothing but invoke :py:func:`setup` without arguments.
 
 .. _PEP 517: https://www.python.org/dev/peps/pep-0517/

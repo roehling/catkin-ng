@@ -57,4 +57,4 @@ if(HAZEL_DEVEL_PREFIX)
     file(COPY cmake/ DESTINATION "${HAZEL_DEVEL_PREFIX}/${HAZEL_PACKAGE_CMAKE_DESTINATION}")
 endif()
 
-hazel_python_setup(GLOBAL)
+hazel_python_setup(GLOBAL_SCRIPTS)
