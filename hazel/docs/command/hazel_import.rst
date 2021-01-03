@@ -43,8 +43,8 @@ pkg-config
         <moduleSpec> [<moduleSpec> ...]
     )
 
-Creates an imported target ``PkgConfig::<target>`` from one or more given
-pkg-config modules.
+Creates an imported interface target ``PkgConfig::<target>`` from one or more
+given pkg-config modules.
 
 When ``REQUIRED`` is given, the command will fail with a fatal error if the
 target cannot be created.
@@ -57,8 +57,8 @@ be found. This is also the default behavior if neither ``PKG_CHECK_MODULES``
 nor ``PKG_SEARCH_MODULE`` is given.
 
 When ``PKG_SEARCH_MODULE`` is given, ``hazel_import()`` will treat the given
-modules as alternatives and use the first available for the imported target. It
-will only fail if none of the modules can be found.
+modules as equivalent alternatives and use the first available one for the
+imported target. It will only fail if none of the modules can be found.
 
 Each ``<moduleSpec>`` can be either a bare module name or it can be a module
 name with a version constraint (operators ``=``, ``<``, ``>``, ``<=``, and
@@ -81,8 +81,8 @@ catkin
         [...]
     )
 
-Creates an imported target ``catkin::<package>`` that wraps the exported
-:cmake:variable:`<package>_INCLUDE_DIRS` and
+Creates an imported interface target ``catkin::<package>`` that wraps the
+exported :cmake:variable:`<package>_INCLUDE_DIRS` and
 :cmake:variable:`<package>_LIBRARIES` variables.
 
 When ``REQUIRED`` is given, the command will fail with a fatal error if the
@@ -109,12 +109,13 @@ ament
         [...]
     )
 
-Creates an imported target ``ament::<package>`` that wraps the exported
-:cmake:variable:`<package>_DEFINITIONS`,
+Creates an imported interface target ``ament::<package>`` that wraps the
+exported :cmake:variable:`<package>_DEFINITIONS`,
 :cmake:variable:`<package>_INCLUDE_DIRS` and
 :cmake:variable:`<package>_LIBRARIES` variables and can be linked against your
-own targets. If the ament package supports modern CMake targets, the imported
-target will link against those instead.
+own targets. If the ament package supports modern CMake targets, which is
+determined by the presence of a non-empty :cmake:variable:`<package>_TARGETS`
+variable, the ``ament::<package>`` target will link against those instead.
 
 When ``REQUIRED`` is given, the command will fail with a fatal error if the
 package cannot be found or if the package is not an ament package.
