@@ -20,7 +20,7 @@ function(hazel_define_property name brief_docs)
     define_property(DIRECTORY "${PROJECT_SOURCE_DIR}" PROPERTY "${name}" BRIEF_DOCS "${brief_docs}")
 endfunction()
 
-function(hazel_get_property)
+function(hazel_get_properties)
     foreach(name IN ITEMS ${ARGN})
         get_property(value DIRECTORY "${PROJECT_SOURCE_DIR}" PROPERTY "${name}")
         set(${name} "${value}" PARENT_SCOPE)

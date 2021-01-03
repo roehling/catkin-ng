@@ -79,11 +79,7 @@ The following options are available:
 ``EXPORT``
 
     Export a target set. You can add targets to the set with the ``TARGETS``
-    option, or with
-
-    .. code-block:: cmake
-
-        install(TARGETS ... EXPORT <export>)
+    option, or with the :cmake:command:`install(TARGETS)` command.
 
 ``FILE``
 

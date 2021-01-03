@@ -17,7 +17,7 @@
 # limitations under the License.
 #
 ##############################################################################
-from setuptools import setup as _setup
+from setuptools import setup as _setup, find_packages, find_namespace_packages
 from catkin_pkg.package import parse_package
 from collections import defaultdict
 
@@ -45,5 +45,7 @@ def setup(**kwargs):
         kwargs["description"] = kwargs.get("description", package.description.strip())
     if "license" not in config["metadata"]:
         kwargs["license"] = kwargs.get("license", " and ".join(package.licenses))
-
+    if "packages" not in config["options"] and "packages" not in kwargs:
+        package_dir = kwargs.get("package_dir", config["options"].get("package_dir", {}))
+        kwargs["packages"] = find_namespace_packages(package_dir.get("", "."))
     _setup(**kwargs)

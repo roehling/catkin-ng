@@ -26,7 +26,6 @@ Create the CMake configuration files for the Hazel package.
         [DEPENDS <depend> ...]
         [EXPORT <export>]
         [NAMESPACE <namespace>]
-        [STRICT_VERSIONING]
         [TARGETS <target> ...]
     )
 
@@ -62,8 +61,14 @@ The following options are available:
 
 ``CMAKE_SCRIPTS``
 
-    Install additional custom CMake configuration scripts. For details, see the
-    documentation of the :cmake:command:`hazel_export` command.
+    Export custom CMake configuration scripts. Each named script is installed
+    with the package, and a corresponding :cmake:command:`include` command is
+    added to the main configuration script. Relative paths are assumed to be
+    relative to :cmake:variable:`CMAKE_CURRENT_SOURCE_DIR`.
+
+    Hazel will automatically invoke certain preprocessors if the corresponding
+    templates are found. For details, refer to the
+    :cmake:command:`hazel_export` command.
 
 ``DEPENDS``
 
@@ -97,15 +102,20 @@ The following options are available:
 
 ``EXPORT``
 
-    Export package targets from the export set ``<export>``. For details, see
-    the documentation of the :cmake:command:`hazel_export` command.
+    Export a target set. You can add targets to the set with the ``TARGETS``
+    option, or with the :cmake:command:`install(TARGETS)` command.
 
 ``NAMESPACE``
 
-    Prefix exported targets with ``<namespace>``. For details, see the
-    documentation of the :cmake:command:`hazel_export` command.
+    Prefix all exported targets with ``<namespace>``. If omitted, it will
+    default to ``${PROJECT_NAME}::``.
 
 ``TARGETS``
 
-    Add targets to the export set. For details, see the documentation of the
-    :cmake:command:`hazel_export` command.
+    Add targets to the export set. If the ``EXPORT`` option is omitted, an
+    implicit ``EXPORT ${PROJECT_NAME}Targets`` is assumed. The targets will
+    also automatically be installed to the proper locations.
+
+    The ``TARGETS`` option is the recommended way to export targets, because it
+    provides Hazel with an opportunity to scan the targets for known external
+    dependencies and implicitly add them to the ``DEPENDS`` option.

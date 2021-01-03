@@ -34,7 +34,7 @@ function(hazel_package)
 
     hazel_export(EXPORT "${arg_EXPORT}" NAMESPACE "${arg_NAMESPACE}" FILE "${PROJECT_NAME}Targets" TARGETS ${arg_TARGETS} CMAKE_SCRIPTS ${arg_CMAKE_SCRIPTS})
 
-    hazel_get_property(
+    hazel_get_properties(
         HAZEL_PACKAGE_EXPORTED_CMAKE_FILES
         HAZEL_PACKAGE_EXPORTED_DEPENDS
         HAZEL_PACKAGE_EXPORTED_TARGET_FILES
@@ -46,8 +46,8 @@ function(hazel_package)
 
     set(regular_depends)
     foreach(dep IN LISTS HAZEL_PACKAGE_EXPORTED_DEPENDS)
-        if(dep IN_LIST HAZEL_PACKAGE_IMPORTED_TARGETS AND dep MATCHES "([a-z0-9]+)::(.+)")
-            hazel_get_property(HAZEL_PACKAGE_IMPORT_FILE_${CMAKE_MATCH_1}_${CMAKE_MATCH_2})
+        if(dep IN_LIST HAZEL_PACKAGE_IMPORTED_TARGETS AND dep MATCHES "([A-Za-z0-9]+)::(.+)")
+            hazel_get_properties(HAZEL_PACKAGE_IMPORT_FILE_${CMAKE_MATCH_1}_${CMAKE_MATCH_2})
             _hazel_export_cmake_scripts(${HAZEL_PACKAGE_IMPORT_FILE_${CMAKE_MATCH_1}_${CMAKE_MATCH_2}})
         else()
             if(${dep}_VERSION)
