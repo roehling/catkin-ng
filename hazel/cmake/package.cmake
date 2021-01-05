@@ -27,12 +27,20 @@ function(hazel_package)
     if(NOT DEFINED arg_COMPATIBILITY)
         set(arg_COMPATIBILITY ExactVersion)
     endif()
+    if(arg_EXPORT)
+        set(export_file "${arg_EXPORT}")
+    else()
+        set(export_file "${PROJECT_NAME}Targets")
+    endif()
 
     include(CMakePackageConfigHelpers)
     set(HAZEL_GENERATED_DIR "${CMAKE_CURRENT_BINARY_DIR}/hazel-generated")
     file(MAKE_DIRECTORY "${HAZEL_GENERATED_DIR}")
 
-    hazel_export(EXPORT "${arg_EXPORT}" NAMESPACE "${arg_NAMESPACE}" FILE "${PROJECT_NAME}Targets" TARGETS ${arg_TARGETS} CMAKE_SCRIPTS ${arg_CMAKE_SCRIPTS})
+    hazel_export(ONLY_LIBRARIES
+        EXPORT "${arg_EXPORT}" NAMESPACE "${arg_NAMESPACE}" FILE "${export_file}"
+        TARGETS ${arg_TARGETS} CMAKE_SCRIPTS ${arg_CMAKE_SCRIPTS}
+    )
 
     hazel_get_properties(
         HAZEL_PACKAGE_EXPORTED_CMAKE_FILES

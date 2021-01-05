@@ -7,4 +7,4 @@ find_package(bar REQUIRED)
 add_executable(bar-tool src/bar-tool.cpp)
 target_link_libraries(bar-tool PRIVATE bar::bar)
 
-hazel_package()
+hazel_package(TARGETS bar-tool)

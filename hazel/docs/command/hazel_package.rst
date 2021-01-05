@@ -119,3 +119,16 @@ The following options are available:
     The ``TARGETS`` option is the recommended way to export targets, because it
     provides Hazel with an opportunity to scan the targets for known external
     dependencies and implicitly add them to the ``DEPENDS`` option.
+
+    Hazel will also install all executables you list here, which will save you
+    from typing an extra :cmake:command:`install` command. You are encouraged
+    to make use of this.
+    
+    Unlike libraries, Hazel will not add the executables to the export set, as
+    there is almost never a need for a dependent package to import its
+    location, not to mention that ROS binaries are installed in a standardized
+    location anyway.
+
+    If, for some reason, you really want to create an importable target for an
+    executable, you need to explicitly export it with the
+    :cmake:command:`hazel_export` command instead.

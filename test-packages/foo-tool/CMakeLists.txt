@@ -7,4 +7,4 @@ find_package(foo REQUIRED)
 add_executable(foo-tool src/foo-tool.cpp)
 target_link_libraries(foo-tool PRIVATE foo::foo)
 
-hazel_package()
+hazel_package(TARGETS foo-tool)
