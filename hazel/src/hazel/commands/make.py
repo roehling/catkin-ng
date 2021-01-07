@@ -48,11 +48,11 @@ def prepare_args(parser):
 def shlex_join(args):
     if hasattr(shlex, "join"):
         return shlex.join(args)
-    return [shlex.quote(s) for s in args]
+    return " ".join(shlex.quote(s) for s in args)
 
 
 def execute_cmd(args):
-    print("$", " ".join(shlex_join(args)))
+    print("$", shlex_join(args))
     subprocess.run(args, check=True)
 
 
