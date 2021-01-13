@@ -1,5 +1,5 @@
 .. Hazel Build System
-   Copyright 2020,2021 Timo Röhling <timo@gaussglocke.de>
+   Copyright 2020-2021 Timo Röhling <timo@gaussglocke.de>
    .
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -39,25 +39,30 @@ The following options are available:
 ``COMPATIBILITY``
 
     This option determines which requested package versions will be considered
-    compatible by :cmake:command:`find_package`. The compatibility mode is used
-    internally as argument for
-    :cmake:command:`write_basic_package_version_file` and may take one of the
-    following values:
+    compatible by :cmake:command:`find_package`. An installed package version
+    will be considered compatible only if it is newer or exactly the same as
+    the requested version, but additional restrictions may be applied:
 
-    * ``AnyNewerVersion`` means that the installed package version will be
-      considered compatible if it is newer or exactly the same as the
-      requested version. This mode should be used for packages which are
-      fully backwards compatible, even across major versions.
-    * ``SameMajorVersion`` means that the major version must be the same as
-      requested, e.g. version 2.0 will not be considered compatible if
+    * ``AnyNewerVersion`` means that no additional restrictions apply. This
+      mode should be used for packages which are fully backwards compatible,
+      even across major versions.
+    * ``SameMajorVersion`` means that the major version must be the same
+      as requested, e.g. version 2.0 will not be considered compatible if
       version 1.0 is requested.
     * ``SameMinorVersion`` means that both major and minor version must be
-      the same as requested, e.g. version 0.2 will not be compatiblle if
+      the same as requested, e.g. version 0.2 will not be compatible if
       0.1 is requested.
     * ``ExactVersion`` means that the package is only considered compatible
       if the requested version matches exactly the installed version.
-    
+    * ``SemanticVersioning`` or ``Semver`` means that the package version must
+      match the requested version up to the first non-zero component. For
+      version 1.0.0 and newer, it is equivalent to ``SameMajorVersion``. For
+      version numbers of the form 0.x.y (with x non-zero), it is equivalent to
+      ``SameMinorVersion``. For version numbers of the form 0.0.z, it is
+      equivalent to ``ExactVersion``.
+
     If the ``COMPATIBILITY`` option is not given, ``ExactVersion`` is assumed.
+    You are encouraged to adopt semantic versioning for your packages.
 
 ``CMAKE_SCRIPTS``
 
