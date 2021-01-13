@@ -28,8 +28,10 @@ then
 		rm -rf "$wsdir"
 	fi
     mkdir -p "$wsdir"
+    trap "env; ls -R $wsdir/devel" ERR
 else
     wsdir="$(mktemp -d)"
+    trap "env; ls -R $wsdir/devel" ERR
     trap "rm -rf $wsdir" EXIT
 fi
 
@@ -56,5 +58,6 @@ run()
 }
 
 run "$wsdir/src/hazel/bootstrap.sh" --pkg hazel
+false
 run hazel_make "$@"
 run DESTDIR="$wsdir/install" hazel_make --target install "$@"
