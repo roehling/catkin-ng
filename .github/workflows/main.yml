@@ -10,7 +10,8 @@ jobs:
       - uses: actions/checkout@v2
       - name: Install dependencies
         run: |
-          sudo apt-get install cmake python3-catkin-pkg python3-sphinx
+          sudo apt-get install cmake python3-pip
+          pip3 install catkin_pkg sphinx empy
       - name: Build test packages
         run: |
           ./test-packages/build-test-packages.sh
