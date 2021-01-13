@@ -13,8 +13,8 @@ jobs:
           python-version: '3.x'
       - name: Install dependencies
         run: |
-          sudo apt-get install cmake
-          pip install catkin_pkg sphinx empy
+          sudo apt-get install cmake libjpeg-dev libpng-dev
+          pip install catkin_pkg empy sphinx sphinxcontrib-moderncmakedomain
       - name: Build test packages
         run: |
           ./test-packages/build-test-packages.sh
