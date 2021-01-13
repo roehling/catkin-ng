@@ -28,10 +28,8 @@ then
 		rm -rf "$wsdir"
 	fi
     mkdir -p "$wsdir"
-    trap "env; ls -lR $wsdir/src $wsdir/devel" ERR
 else
     wsdir="$(mktemp -d)"
-    trap "env; ls -lR $wsdir/src $wsdir/devel" ERR
     trap "rm -rf $wsdir" EXIT
 fi
 
@@ -58,5 +56,14 @@ run()
 }
 
 run "$wsdir/src/hazel/bootstrap.sh" --pkg hazel
+echo "8< ---------------------------------------------------------------------"
+ls -lR "$wsdir/src" "$wsdir/devel"
+echo "8< ---------------------------------------------------------------------"
+cat $wsdir/devel/lib/python3/dist-packages/hazel.egg-link
+echo
+echo "8< ---------------------------------------------------------------------"
+cat $wsdir/devel/lib/python3/dist-packages/easy-install.pth
+echo
+echo "8< ---------------------------------------------------------------------"
 run hazel_make "$@"
 run DESTDIR="$wsdir/install" hazel_make --target install "$@"
