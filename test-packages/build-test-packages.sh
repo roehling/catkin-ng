@@ -47,7 +47,7 @@ cd "$wsdir"
 
 run()
 {
-    env -i ROS_PYTHON_VERSION=3 LANG=C.UTF-8 \
+    env ROS_PYTHON_VERSION=3 LANG=C.UTF-8 \
         PATH="$wsdir/devel/bin:$PATH" \
         HAZEL_PREFIX_PATH="$wsdir/devel" \
         CMAKE_PREFIX_PATH="$CMAKE_PREFIX_PATH" \
