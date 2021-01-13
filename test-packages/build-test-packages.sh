@@ -59,6 +59,6 @@ run env
 echo "--------------------------------------------------------------------"
 run "$wsdir/src/hazel/bootstrap.sh" --pkg hazel
 echo "--------------------------------------------------------------------"
-run python3 -m hazel make "$@"
+run hazel_make "$@"
 echo "--------------------------------------------------------------------"
 run DESTDIR="$wsdir/install" hazel_make --target install "$@"
