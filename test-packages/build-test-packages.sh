@@ -28,10 +28,10 @@ then
 		rm -rf "$wsdir"
 	fi
     mkdir -p "$wsdir"
-    trap "env; ls -R $wsdir/devel" ERR
+    trap "env; ls -lR $wsdir/src $wsdir/devel" ERR
 else
     wsdir="$(mktemp -d)"
-    trap "env; ls -R $wsdir/devel" ERR
+    trap "env; ls -lR $wsdir/src $wsdir/devel" ERR
     trap "rm -rf $wsdir" EXIT
 fi
 
