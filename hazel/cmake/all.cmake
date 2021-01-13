@@ -1,7 +1,7 @@
 ##############################################################################
 #
 # Hazel Build System
-# Copyright 2020,2021 Timo Röhling <timo@gaussglocke.de>
+# Copyright 2020-2021 Timo Röhling <timo@gaussglocke.de>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 # limitations under the License.
 #
 ##############################################################################
-cmake_minimum_required(VERSION 3.14 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
 if(DEFINED CATKIN_DEVEL_PREFIX AND NOT DEFINED HAZEL_DEVEL_PREFIX)
     set(HAZEL_DEVEL_PREFIX "${CATKIN_DEVEL_PREFIX}")
 endif()

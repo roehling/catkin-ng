@@ -1,7 +1,7 @@
 ##############################################################################
 #
 # Hazel Build System
-# Copyright 2020,2021 Timo Röhling <timo@gaussglocke.de>
+# Copyright 2020-2021 Timo Röhling <timo@gaussglocke.de>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 # limitations under the License.
 #
 ##############################################################################
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.10)
 project(hazel)
 
 option(BUILD_DOCS "Build and install Sphinx documentation" ON)
@@ -28,11 +28,7 @@ configure_package_config_file(config.cmake.in "${PROJECT_NAME}Config.cmake"
     INSTALL_DESTINATION "${HAZEL_PACKAGE_CMAKE_DESTINATION}"
     NO_SET_AND_CHECK_MACRO NO_CHECK_REQUIRED_COMPONENTS_MACRO
 )
-write_basic_package_version_file("${PROJECT_NAME}ConfigVersion.cmake"
-    VERSION ${PROJECT_VERSION}
-    COMPATIBILITY SameMajorVersion
-    ARCH_INDEPENDENT
-)
+hazel_write_package_version_file("${PROJECT_NAME}ConfigVersion.cmake" COMPATIBILITY SameMajorVersion)
 if(HAZEL_DEVEL_PREFIX)
     file(COPY "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake" DESTINATION "${HAZEL_DEVEL_PREFIX}/${HAZEL_PACKAGE_CMAKE_DESTINATION}")
     configure_package_config_file(config.cmake.in "${HAZEL_DEVEL_PREFIX}/${HAZEL_PACKAGE_CMAKE_DESTINATION}/${PROJECT_NAME}Config.cmake"

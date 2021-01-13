@@ -1,7 +1,7 @@
 ##############################################################################
 #
 # Hazel Build System
-# Copyright 2020,2021 Timo Röhling <timo@gaussglocke.de>
+# Copyright 2020-2021 Timo Röhling <timo@gaussglocke.de>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -69,12 +69,7 @@ function(hazel_package)
 
     configure_file("${HAZEL_CMAKE_DIR}/package-config.context.in" "${HAZEL_GENERATED_DIR}/package-config.context" @ONLY)
     execute_process(COMMAND "${HAZEL_PYTHON_EXECUTABLE}" -m em -F "${HAZEL_GENERATED_DIR}/package-config.context" -o "${HAZEL_GENERATED_DIR}/package-config.cmake.in" "${HAZEL_CMAKE_DIR}/package-config.cmake.em")
-    if(HAZEL_PACKAGE_ARCHITECTURE_INDEPENDENT)
-        set(arch_indep ARCH_INDEPENDENT)
-    else()
-        set(arch_indep)
-    endif()
-    write_basic_package_version_file("${HAZEL_GENERATED_DIR}/${PROJECT_NAME}ConfigVersion.cmake" VERSION "${PROJECT_VERSION}" COMPATIBILITY "${arg_COMPATIBILITY}" ${arch_indep})
+    hazel_write_package_version_file("${HAZEL_GENERATED_DIR}/${PROJECT_NAME}ConfigVersion.cmake" COMPATIBILITY ${arg_COMPATIBILITY})
     if(HAZEL_DEVEL_PREFIX)
         if(HAZEL_PACKAGE_EXPORTED_TARGET_FILES)
             file(COPY "${HAZEL_CMAKE_DIR}/list_exported_targets.py" DESTINATION "${HAZEL_DEVEL_PREFIX}/${HAZEL_PACKAGE_CMAKE_DESTINATION}")
@@ -99,10 +94,24 @@ function(hazel_package)
         install(FILES "${HAZEL_CMAKE_DIR}/list_exported_targets.py" DESTINATION "${HAZEL_PACKAGE_CMAKE_DESTINATION}")
     endif()
     # Preliminary support for ament resource index
-    file(TOUCH "${HAZEL_GENERATED_DIR}/${PROJECT_NAME}")
+    file(WRITE "${HAZEL_GENERATED_DIR}/${PROJECT_NAME}" "")
     install(FILES "${HAZEL_GENERATED_DIR}/${PROJECT_NAME}" DESTINATION "${HAZEL_GLOBAL_SHARE_DESTINATION}/ament_index/resource_index/packages")
     # Install package.xml
     install(FILES "${HAZEL_PACKAGE_XML}" DESTINATION "${HAZEL_PACKAGE_SHARE_DESTINATION}")
+endfunction()
+
+function(hazel_write_package_version_file filename)
+    cmake_parse_arguments(arg "" "COMPATIBILITY" "" ${ARGN})
+    if(arg_UNPARSED_ARGUMENTS)
+        message(FATAL_ERROR "package '${PROJECT_NAME}' called hazel_write_package_version_file() with invalid parameters: ${arg_UNPARSED_ARGUMENTS}")
+    endif()
+    set(HAZEL_GENERATED_DIR "${CMAKE_CURRENT_BINARY_DIR}/hazel-generated")
+    file(MAKE_DIRECTORY "${HAZEL_GENERATED_DIR}")
+    configure_file("${HAZEL_CMAKE_DIR}/package-config.context.in" "${HAZEL_GENERATED_DIR}/package-config-version.context" @ONLY)
+    if(NOT IS_ABSOLUTE "${filename}")
+        set(filename "${CMAKE_CURRENT_BINARY_DIR}/${filename}")
+    endif()
+    execute_process(COMMAND "${HAZEL_PYTHON_EXECUTABLE}" -m em -F "${HAZEL_GENERATED_DIR}/package-config-version.context" -o "${filename}" "${HAZEL_CMAKE_DIR}/package-config-version.cmake.em")
 endfunction()
 
 function(_hazel_merge_find_package_calls outvar depends)

@@ -2,34 +2,39 @@ Hazel Build System
 ==================
 
 Hazel is a successor for the ROS catkin build system. Its design follows the
-[Modern CMake](https://cliutils.gitlab.io/modern-cmake/) principles. In particular,
-it uses the available CMake facilities for target import and export. 
-Hazel tries very hard not to mess with CMake's dependency management, so you will
-not see any manually constructed `catkin_LIBRARIES` or `catkin_INCLUDE_DIRS`variables:
-everything is a target. CMake scripts written for Hazel are pretty much regular CMake
-scripts, with a few helpful macros to reduce boilerplate code:
-
+[Modern CMake](https://cliutils.gitlab.io/modern-cmake/) principles. In
+particular, it uses the available CMake facilities for target import and
+export. Hazel tries very hard not to mess with CMake's dependency management,
+so you will not need (or forget to use) any opaque variable references such as
+`${catkin_LIBRARIES}` or `${catkin_INCLUDE_DIRS}`: everything is a target.
+CMake scripts written for Hazel are pretty much regular CMake scripts, with a
+few helpful macros to reduce boilerplate code:
 
 ```cmake
-cmake_minimum_required(VERSION 3.14)  # Hazel needs CMake 3.14+
+cmake_minimum_required(VERSION 3.10)  # Hazel needs CMake 3.10+
 
-project(foo VERSION 1.2.3)
+project(foo VERSION 1.2.3 LANGUAGES CXX)
 
 # Hazel
 find_package(hazel REQUIRED)
 
-# Build dependencies
+# Discover build dependencies.
 find_package(bar REQUIRED)                          # another Hazel package
 find_package(Boost REQUIRED COMPONENTS filesystem)  # system library
 
-# Build a library
+# Build a library.
 add_library(foo src/libfoo.cpp)
-# Link against dependencies. This will also take care of include paths and
-# other required settings.
+
+# Link against dependencies.
+# This will also take care of include paths and other required settings.
 target_link_libraries(foo
     PUBLIC bar::bar
     PRIVATE Boost::filesystem
 )
+
+# Declare local includes.
+# Note that you don't need to set include paths for linked dependencies.
+# CMake does this automatically for you.
 target_include_directories(foo
     PUBLIC
         # BUILD_INTERFACE is for the build itself and the develspace
@@ -38,19 +43,19 @@ target_include_directories(foo
         $<INSTALL_INTERFACE:include>
 )
 
-# Install public headers
+# Install public headers.
 install(DIRECTORY include/foo DESTINATION include)
 
-# Build a program that uses the library
+# Build a program that uses the library.
 add_executable(foo-cli src/cli.cpp)
 target_link_libraries(foo-cli
     PRIVATE foo
 )
 
-# Export the library so other packages can use it
-# Hazel is smart enough to install foo and figure out that you need the
-# Hazel package bar as transitive dependency.
-hazel_package(TARGETS foo)
+# Export the library and the program so other packages can use it.
+# Hazel is smart enough to install them and figure out that you need the
+# Hazel package bar as transitive dependency for foo.
+hazel_package(TARGETS foo foo-cli)
 ```
 
 Note that Hazel is still in the pre-alpha stage and not yet meant for production use.

@@ -1,7 +1,7 @@
 ##############################################################################
 #
 # Hazel Build System
-# Copyright 2020,2021 Timo Röhling <timo@gaussglocke.de>
+# Copyright 2020-2021 Timo Röhling <timo@gaussglocke.de>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,7 +19,12 @@
 
 function(hazel_find_python_interpreter)
     set(PYTHON_VERSION "$ENV{ROS_PYTHON_VERSION}" CACHE STRING "Use specific Python version")
-    find_package(Python ${PYTHON_VERSION} REQUIRED COMPONENTS Interpreter)
+    if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.12")
+        find_package(Python ${PYTHON_VERSION} REQUIRED COMPONENTS Interpreter)
+    else()
+        find_package(PythonInterp ${PYTHON_VERSION} REQUIRED)
+        set(Python_EXECUTABLE "${PYTHON_EXECUTABLE}")
+    endif()
     execute_process(COMMAND "${Python_EXECUTABLE}" -c "import os, sysconfig;print(os.path.relpath(sysconfig.get_path('purelib'), sysconfig.get_path('data')))" OUTPUT_VARIABLE packages_dir OUTPUT_STRIP_TRAILING_WHITESPACE)    
     set(HAZEL_PYTHON_EXECUTABLE "${Python_EXECUTABLE}" PARENT_SCOPE)
     set(HAZEL_PYTHON_SITE_PACKAGES_DIR "${packages_dir}" PARENT_SCOPE)
@@ -39,7 +44,9 @@ function(hazel_find_python_interpreter)
     endif()
     set(HAZEL_PYTHON_INSTALL_PACKAGES_DIR "${packages_dir}" PARENT_SCOPE)
     hazel_list_from_path_var(path_list "$ENV{PYTHONPATH}")
-    list(REVERSE HAZEL_PREFIX_PATH)
+    if(HAZEL_PREFIX_PATH)
+        list(REVERSE HAZEL_PREFIX_PATH)
+    endif()
     foreach(prefix IN LISTS HAZEL_PREFIX_PATH)
         if(NOT "${prefix}/${packages_dir}" IN_LIST path_list)
             list(INSERT path_list 0 "${prefix}/${packages_dir}")
