@@ -18,7 +18,7 @@
 ##############################################################################
 
 function(hazel_find_python_interpreter)
-    set(PYTHON_VERSION "$ENV{ROS_PYTHON_VERSION}" CACHE STRING "Use specific Python version")
+    set(PYTHON_VERSION "$ENV{ROS_PYTHON_VERSION}" CACHE STRING "Use specific Python version (2 or 3)")
     if (NOT PYTHON_VERSION MATCHES "^[0-9]*$")
         message(FATAL_ERROR "Invalid ROS_PYTHON_VERSION ${PYTHON_VERSION}")
     endif()
@@ -66,6 +66,7 @@ function(hazel_find_python_interpreter)
         string(REPLACE ";" ":" path_list "${path_list}")
     endif()
     set(ENV{PYTHONPATH} "${path_list}")
+    message(STATUS "PYTHONPATH is ${path_list}")
 endfunction()
 
 function(hazel_python_setup)

@@ -19,5 +19,5 @@
 ##############################################################################
 set -e
 packagedir=$(cd "$(dirname "$0")"; pwd)
-export PYTHONPATH="${packagedir}/src"
+export PYTHONPATH="${packagedir}/src${PYTHONPATH:+:}$PYTHONPATH"
 python3 -m hazel make "$@"
