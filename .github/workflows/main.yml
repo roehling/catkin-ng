@@ -8,10 +8,13 @@ jobs:
     runs-on: ${{ matrix.ubuntu }}
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
       - name: Install dependencies
         run: |
-          sudo apt-get install cmake python3-pip
-          pip3 install catkin_pkg sphinx empy
+          sudo apt-get install cmake
+          pip install catkin_pkg sphinx empy
       - name: Build test packages
         run: |
           ./test-packages/build-test-packages.sh
