@@ -18,6 +18,16 @@
 #
 ##############################################################################
 set -e
+for PYTHON in python python3
+do
+    if PYTHON=$(type -p $PYTHON) &>/dev/null
+    then
+        if $PYTHON -c "import sys; sys.exit(0 if sys.version_info[0] == ${ROS_PYTHON_VERSION:-3} else 1)" &>/dev/null
+        then
+            break
+        fi
+    fi
+done
 packagedir=$(cd "$(dirname "$0")"; pwd)
 export PYTHONPATH="${packagedir}/src${PYTHONPATH:+:}$PYTHONPATH"
-python3 -m hazel make "$@"
+exec $PYTHON -m hazel make "$@"
