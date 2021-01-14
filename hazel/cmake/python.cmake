@@ -47,7 +47,7 @@ function(hazel_find_python_interpreter)
         endif()
         set(HAZEL_PYTHON_INSTALL_LAYOUT "--install-layout=deb" PARENT_SCOPE)
     endif()
-    message(STATUS "Python packages will be put in <PREFIX>/${packages_dir}")
+    message(STATUS "Python packages directory is ${packages_dir}")
     set(HAZEL_PYTHON_INSTALL_PACKAGES_DIR "${packages_dir}" PARENT_SCOPE)
     hazel_list_from_path_var(path_list "$ENV{PYTHONPATH}")
     if(HAZEL_PREFIX_PATH)
@@ -97,11 +97,10 @@ function(hazel_python_setup)
                 string(REPLACE ";" ":" path_list "${path_list}")
             endif()
             set(PYTHONPATH "${path_list}")
-            message(STATUS "DEBUG: pip install is called with PYTHONPATH=${PYTHONPATH}")
             add_custom_command(OUTPUT "${HAZEL_GENERATED_DIR}/python-develspace.stamp"
                 MAIN_DEPENDENCY "${arg_DIRECTORY}/setup.py"
                 WORKING_DIRECTORY "${arg_DIRECTORY}"
-                COMMAND "${CMAKE_COMMAND}" -E env "PYTHONPATH=${PYTHONPATH}" "${HAZEL_PYTHON_EXECUTABLE}" -m pip install --no-use-pep517 --no-deps --prefix "${HAZEL_DEVEL_PREFIX}" "--install-option=--install-dir=${HAZEL_DEVEL_PYTHON_DIR}" "--install-option=--script-dir=${HAZEL_DEVEL_PREFIX}/${script_bindir}" --editable .
+                COMMAND "${CMAKE_COMMAND}" -E env "PYTHONPATH=${PYTHONPATH}" "${HAZEL_PYTHON_EXECUTABLE}" setup.py develop --no-deps --prefix "${HAZEL_DEVEL_PREFIX}" "--install-dir=${HAZEL_DEVEL_PYTHON_DIR}" "--script-dir=${HAZEL_DEVEL_PREFIX}/${script_bindir}"
                 COMMAND "${CMAKE_COMMAND}" -E touch "${HAZEL_GENERATED_DIR}/python-develspace.stamp"
                 VERBATIM)
             add_custom_target(python-develspace ALL DEPENDS "${HAZEL_GENERATED_DIR}/python-develspace.stamp")
