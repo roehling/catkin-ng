@@ -18,12 +18,22 @@
 #
 ##############################################################################
 set -e
-packagedir=$(cd "$(dirname "$0")"; pwd)
+for PYTHON in python python3
+do
+    if PYTHON=$(type -p $PYTHON) &>/dev/null
+    then
+        if $PYTHON -c "import sys; sys.exit(0 if sys.version_info[0] == ${ROS_PYTHON_VERSION:-3} else 1)" &>/dev/null
+        then
+            break
+        fi
+    fi
+done
+packagedir="$(cd "$(dirname "$0")"; pwd)"
 
-if [ "${KEEP_WS:-0}" -eq 1 ]
+if [ "${KEEP_WS:-0}" -gt 0 ]
 then
     wsdir="/tmp/hazel_ws"
-	if [ "${NOCLEAN_WS:-0}" -eq 0 ]
+    if [ "${KEEP_WS:-0}" -lt 2 ]
 	then
 		rm -rf "$wsdir"
 	fi
@@ -56,12 +66,7 @@ run()
         "$@"
 }
 
-run env
-echo "--------------------------------------------------------------------"
 run "$wsdir/src/hazel/bootstrap.sh" --pkg hazel
-echo "--------------------------------------------------------------------"
-run pip3 list --format=columns
-echo "--------------------------------------------------------------------"
-run hazel_make "$@"
-echo "--------------------------------------------------------------------"
-run DESTDIR="$wsdir/install" hazel_make --target install "$@"
+run $PYTHON -m pip list --format=columns
+run $PYTHON "$wsdir/devel/bin/hazel_make" "$@"
+run DESTDIR="$wsdir/install" $PYTHON "$wsdir/devel/bin/hazel_make" --target install "$@"
