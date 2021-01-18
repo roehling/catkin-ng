@@ -8,7 +8,7 @@ jobs:
     runs-on: ${{ matrix.ubuntu }}
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
+      - uses: actions/setup-python@v1
         with:
           python-version: '3.x'
       - name: Install dependencies
