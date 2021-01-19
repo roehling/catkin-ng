@@ -67,7 +67,7 @@ if(PACKAGE_FIND_VERSION_RANGE)
         "Package '${PACKAGE_FIND_NAME}' declares that different versions are "
         "always incompatible with each other, so version ranges in "
         "find_package() are ignored. Only the lower endpoint of the version "
-        "range is used to examine compatibility."
+        "range is used to determine compatibility."
     )
 @[end if]@
 endif()
