@@ -27,13 +27,14 @@ properties.
 You may be familiar with GNU Make targets, which are basically recipes on how
 to create files. CMake targets are subtly different: you do not tell CMake
 `how` to create a target, but `what` the target should be, and it will figure
-out the rest on its own. Please read that last sentence again. Far too many
-developers treat CMake like a fancy GNU Make and tell it exactly how to do its
-job. They manually add compiler flags and link dependencies, and when things
-break with a different compiler or platform, they add complex detection code.
-After a while, when their CMake script has accumulated a few hundred lines of
-cryptic variable assignments and conditional statements, they come to the
-conclusion that CMake is a bad tool.
+out the rest on its own. This may seem like pointless semantics to you, but it
+makes all the difference. Far too many developers treat CMake like a fancy GNU
+Make and tell it exactly how to do its job. They manually add compiler flags
+and link dependencies, and when things break with a different compiler or
+platform, they add complex detection code. They add code to deal with the
+dependencies of their dependencies. After a while, when their CMake script has
+accumulated a few hundred lines of cryptic variable assignments and conditional
+statements, they come to the conclusion that CMake is a bad tool.
 
 Did you know that you don't have to add the ``-fPIC`` flag to build position
 independent code? Just tell CMake you want it with the target property
@@ -48,20 +49,20 @@ downgrading from C++14.
 
 This is a recurring pattern with CMake. The CMake developers are actually very
 smart people who test their tool on a variety of platforms and compilers. You
-are very unlikely to outsmart them with your haphazard custom logic, so why
-waste the time?
+are very unlikely to outsmart them with your ad-hoc CMake code, so why waste
+the time?
 
-Treat CMake targets like objects in C++. They have a type, some member
-variables (properties), and even something like member functions (all functions
-with ``target_`` prefix). Just like you avoid global variables in your C++
-code, avoid setting global variables. It is a common CMake anti-pattern to
-treat a CMake target ``foo`` like a dumb alias for ``-lfoo``, so you link
-against the library, but you also need to manually set the include path and
-maybe some macro definitions, which are communicated through global variables
-like ``foo_INCLUDE_DIRS``. But why should `I` have to remember to set these
-properties when I use `your` library? Just tell CMake which include paths and
-which macro definitions are needed when others link against your target, and
-CMake will add everything automatically [#f1]_ .
+Treat CMake targets like objects in C++. They have a type (executable,
+library), some member variables (properties), and even something like member
+functions (all functions with ``target_`` prefix). Just like you avoid global
+variables in your C++ code, avoid setting global variables. It is a common
+CMake anti-pattern to treat a CMake target ``foo`` like a dumb alias for
+``-lfoo``, so you link against the library, but you also need to manually set
+the include path and maybe some macro definitions, which are communicated
+through global variables like ``foo_INCLUDE_DIRS``. But why should `I` have to
+remember to set these properties when I use `your` library? Just tell CMake
+which include paths and which macro definitions are needed when others link
+against your target, and CMake will add everything automatically [#f1]_ .
 
 The CMake developers have been extraordinarily careful to remain compatible
 with older versions. Unfortunately, this means that many deprecated features
@@ -137,13 +138,49 @@ build. This is where most of the Hazel-specific stuff happens:
 
     hazel_package(TARGETS hello_world)
 
-We will go through this statement by statement.
+We will go through this line by line.
 
+The :cmake:command:`cmake_minimum_required` command in line 1 sets the baseline
+version for CMake compatibility. As mentioned before, the CMake developers put
+a lot of effort into backwards compatibility. If a later CMake version changes
+behavior in an incompatible way, you will receive a warning and (at least for
+some time) the possibility to keep the old behavior with the `CMake policy
+mechanism`_.
+
+The :cmake:command:`project` command in line 2 sets the project metadata and
+initializes a few project-related CMake variables. Hazel expects and enforces
+that the project name is the same as the package name you used in the
+``package.xml``. The ``VERSION`` and ``LANGUAGES`` options can be omitted.
+Hazel will automatically use the version number from the ``package.xml`` and
+complain if you use a different version here.
+
+The :cmake:command:`find_package` command in line 4 searches for and
+initializes Hazel. Under most circumstances, you should add the ``REQUIRED``
+option, so CMake will abort if Hazel is not available. Note that you cannot add
+additional package dependencies with the ``COMPONENTS`` keyword as you do with
+catkin. This mechanism exists only to add those dependencies to the
+:cmake:variable:`catkin_LIBRARIES` and :cmake:variable:`catkin_INCLUDE_DIRS`
+variables, which are not needed with Hazel. If we had additional dependencies,
+however, we would add the corresponding :cmake:command:`find_package` or
+:cmake:command:`hazel_import` commands after this line.
+
+The :cmake:command:`add_executable` command in line 6 tells CMake which source
+files need to be compiled and linked to produce our Hello World program.
+Executables and libraries are the most common build targets.
+
+The :cmake:command:`hazel_package` command in line 10 is the final command in
+every Hazel package and makes the created targets available for others. In this
+case, we want to export our ``hello_world`` target, so users can run our
+program with ``rosrun``. By the way, it is very common to name the main target
+like the package itself, and you are encouraged to follow this convention. It
+is not required, though.
+
+.. _CMake policy mechanism: https://cmake.org/cmake/help/latest/command/cmake_policy.html
 
 .. [#f1]
 
-    The downside is that the library author is the one who has to tell CMake,
-    and this can be a pain with third-party libraries whose authors do not know
+    Since the library author is the one who has to tell CMake, you will
+    inevitably run into third-party libraries whose authors do not know
     how to CMake. There are ways to deal with this using interface libraries
     though; it is how Hazel can provide you with nice targets such as
     ``catkin::package-name`` even though catkin itself does not.
