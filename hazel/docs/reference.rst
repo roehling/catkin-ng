@@ -13,8 +13,12 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 
-Command Reference
-=================
+CMake Reference
+===============
+
+This section documents the CMake commands which Hazel provides for package
+developers. Commands which are not documented here should be considered an
+implementation detail and are subject to change or disappear without notice.
 
 .. toctree::
     :maxdepth: 1

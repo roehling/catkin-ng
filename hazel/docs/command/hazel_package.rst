@@ -101,7 +101,7 @@ The following options are available:
     whitespaces in the dependency string.
 
     Multiple depends on the same package are allowed and will be combined.
-    Contradicting dependencies such as ``"Boost 1.60 EXACT"`` and ``"Boost 1.70
+    Conflicting constraints such as ``"Boost 1.60 EXACT"`` and ``"Boost 1.70
     EXACT"`` are not allowed and, if not detected by Hazel at build time, will
     render your package unusable.
 
@@ -117,23 +117,20 @@ The following options are available:
 
 ``TARGETS``
 
-    Add targets to the export set. If the ``EXPORT`` option is omitted, an
-    implicit ``EXPORT ${PROJECT_NAME}Targets`` is assumed. The targets will
-    also automatically be installed to the proper locations.
+    Declare targets which should be available for others to use. All targets
+    will be installed to the proper locations, i.e., no additional
+    :cmake:command:`install` command is needed.
 
-    The ``TARGETS`` option is the recommended way to export targets, because it
-    provides Hazel with an opportunity to scan the targets for known external
-    dependencies and implicitly add them to the ``DEPENDS`` option.
+    Library targets will be added to the export set, so they can be imported
+    in other packages. If the ``EXPORT`` option is omitted, an implicit
+    ``EXPORT ${PROJECT_NAME}Targets`` is assumed.
 
-    Hazel will also install all executables you list here, which will save you
-    from typing an extra :cmake:command:`install` command. You are encouraged
-    to make use of this.
-    
-    Unlike libraries, Hazel will not add the executables to the export set, as
-    there is almost never a need for a dependent package to import its
-    location, not to mention that ROS binaries are installed in a standardized
-    location anyway.
-
+    Executable targets will be installed, but not added to the export set, as
+    there is almost never a need for a dependent package to import it.
     If, for some reason, you really want to create an importable target for an
     executable, you need to explicitly export it with the
     :cmake:command:`hazel_export` command instead.
+
+    The ``TARGETS`` option is the recommended way to export targets, because it
+    provides Hazel with an opportunity to scan them for known external
+    dependencies and implicitly add those to the ``DEPENDS`` option.

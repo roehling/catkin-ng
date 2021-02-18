@@ -38,9 +38,9 @@ Compatibility
 -------------
 
 Hazel exports self-contained configuration scripts. Dependent packages can use
-the regular CMake ``find_package()`` mechanism to discover and import the
-targets. Hazel can also import caktin packages, ament packages, and pkg-config
-modules.
+the regular CMake :cmake:command:`find_package()` mechanism to discover and
+import the targets. Hazel can also import caktin packages, ament packages, and
+pkg-config modules.
 
 
 .. rubric:: Footnotes

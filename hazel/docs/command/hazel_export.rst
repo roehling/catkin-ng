@@ -42,21 +42,26 @@ The following options are available:
     relative to :cmake:variable:`CMAKE_CURRENT_SOURCE_DIR`.
 
     Hazel will automatically invoke certain preprocessors if the corresponding
-    templates are found. The ``.cmake`` suffix, if any, will be stripped from
-    ``<script>``. Then:
+    templates are found. For each listed script, the ``.cmake`` suffix, if any,
+    will be stripped, forming the stem name ``<script>``. Then, Hazel looks for
+    matching files in the following order:
 
-    * If ``<script>.cmake`` exists, it is installed verbatim.
+    * If ``<script>.cmake`` exists, it is installed verbatim and no further
+      processing is done. Otherwise:
 
     * If ``<script>.cmake.in`` exists, the :cmake:command:`configure_file`
-      command is invoked (with ``@ONLY``) to create ``<script>.cmake``.
+      command is invoked (with ``@ONLY``) to create ``<script>.cmake``, which
+      is installed. Otherwise:
 
     * If ``<script>.cmake.em`` exists, the Empy preprocessor is invoked to
-      create ``<script>.cmake``.
+      create ``<script>.cmake``, which is installed. Otherwise:
     
     * If ``<script>.cmake.installspace.em`` and/or
       ``<script>.cmake.develspace.em`` exist, the Empy preprocessor is invoked
       to create separate ``<script>.cmake`` versions for installation and the
-      local develspace.
+      local develspace. Otherwise:
+    
+    * Hazel raises a fatal error.
 
     The Empy preprocessor is provided with the following predefined variables:
 
@@ -95,7 +100,8 @@ The following options are available:
 
     Add targets to the export set. If the ``EXPORT`` option is omitted, an
     implicit ``EXPORT ${PROJECT_NAME}Targets`` is assumed. The targets will
-    also automatically be installed to the proper locations.
+    also be installed to the proper locations automatically, i.e., no
+    additional :cmake:command:`install` command is required.
 
     The ``TARGETS`` option is the recommended way to export targets, because it
     provides Hazel with an opportunity to scan the targets for known external
