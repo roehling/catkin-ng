@@ -18,6 +18,8 @@
 #
 ##############################################################################
 set -e
+[[ "${ROS_PYTHON_VERSION:-3}" =~ [23] ]] || (echo>&2 "invalid ROS_PYTHON_VERSION=$ROS_PYTHON_VERSION"; exit 1)
+
 for PYTHON in python python3
 do
     if PYTHON=$(type -p $PYTHON) &>/dev/null
