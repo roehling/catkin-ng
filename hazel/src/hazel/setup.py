@@ -20,6 +20,7 @@
 from setuptools import setup as _setup, find_packages, find_namespace_packages
 from catkin_pkg.package import parse_package
 from collections import defaultdict
+import os
 
 
 def setup(**kwargs):
@@ -35,7 +36,7 @@ def setup(**kwargs):
     if "maintainer" not in kwargs and "maintainer" not in config["metadata"]:
         kwargs["maintainer"] = package.maintainers[0].name
         kwargs["maintainer_email"] = package.maintainers[0].email
-    if "author" not in args and "author" not in config["metadata"] and package.authors and package.maintainers[0].name != package.authors[0].name:
+    if "author" not in kwargs and "author" not in config["metadata"] and package.authors and package.maintainers[0].name != package.authors[0].name:
         kwargs["author"] = package.authors[0].name
         if package.authors[0].email:
             kwargs["author_email"] = package.authors[0].email
@@ -48,4 +49,4 @@ def setup(**kwargs):
     if "packages" not in config["options"] and "packages" not in kwargs:
         package_dir = kwargs.get("package_dir", config["options"].get("package_dir", {}))
         kwargs["packages"] = find_namespace_packages(package_dir.get("", "."))
-    _setup(**kwargs)
+    return _setup(**kwargs)
