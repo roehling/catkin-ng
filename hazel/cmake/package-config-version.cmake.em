@@ -30,8 +30,6 @@
 if HAZEL_PACKAGE_COMPATIBILITY == "SemanticVersion" or HAZEL_PACKAGE_COMPATIBILITY == "Semver":
     if PROJECT_VERSION_MAJOR > 0:
         HAZEL_PACKAGE_COMPATIBILITY = "SameMajorVersion"
-    elif PROJECT_VERSION_MINOR > 0:
-        HAZEL_PACKAGE_COMPATIBILITY = "SameMinorVersion"
     else:
         HAZEL_PACKAGE_COMPATIBILITY = "ExactVersion"
 }@

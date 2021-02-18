@@ -54,12 +54,12 @@ The following options are available:
       0.1 is requested.
     * ``ExactVersion`` means that the package is only considered compatible
       if the requested version matches exactly the installed version.
-    * ``SemanticVersioning`` or ``Semver`` means that the package version must
-      match the requested version up to the first non-zero component. For
-      version 1.0.0 and newer, it is equivalent to ``SameMajorVersion``. For
-      version numbers of the form 0.x.y (with x non-zero), it is equivalent to
-      ``SameMinorVersion``. For version numbers of the form 0.0.z, it is
-      equivalent to ``ExactVersion``.
+    * ``SemanticVersioning`` or ``Semver`` means that the package version
+      number is compliant with the `Semantic Versioning`_ guidelines.
+      For version 1.0.0 and newer, it is equivalent to ``SameMajorVersion``.
+      For earlier version numbers of the form 0.x.y, it is equivalent to
+      ``ExactVersion``, reflecting the unstable nature of initial development
+      releases.
 
     If the ``COMPATIBILITY`` option is not given, ``ExactVersion`` is assumed.
     You are encouraged to adopt semantic versioning for your packages.
@@ -119,7 +119,7 @@ The following options are available:
 
     Declare targets which should be available for others to use. All targets
     will be installed to the proper locations, i.e., no additional
-    :cmake:command:`install` command is needed.
+    :cmake:command:`install(TARGETS)` command is needed.
 
     Library targets will be added to the export set, so they can be imported
     in other packages. If the ``EXPORT`` option is omitted, an implicit
@@ -134,3 +134,5 @@ The following options are available:
     The ``TARGETS`` option is the recommended way to export targets, because it
     provides Hazel with an opportunity to scan them for known external
     dependencies and implicitly add those to the ``DEPENDS`` option.
+
+.. _Semantic Versioning: https://semver.org/
