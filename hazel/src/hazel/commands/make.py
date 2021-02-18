@@ -197,8 +197,13 @@ def run(args):
     return returncode
 
 
-def main():
+def create_standalone_argparse():
     parser = argparse.ArgumentParser(description="build packages in hazel workspace")
     prepare_args(parser)
+    return parser
+
+
+def main():
+    parser = create_standalone_argparse()
     args = parser.parse_args()
     return run(args)

@@ -56,3 +56,4 @@ pkg-config modules.
 
     tutorial
     reference
+    cli

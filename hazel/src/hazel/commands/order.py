@@ -51,8 +51,14 @@ def run(args):
                 print("{} {}".format(name, workspace_packages[name]))
 
 
+def create_standalone_argparse():
+    parser = argparse.ArgumentParser(description="sort packages by dependency")
+    prepare_args(parser)
+    return parser
+
+
 def main():
-    parser = argparse.ArgumentParser(description="build packages in hazel workspace")
+    parser = create_standalone_argparse()
     prepare_args(parser)
     args = parser.parse_args()
     return run(args)

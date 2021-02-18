@@ -40,6 +40,7 @@ release = '1.0'
 # ones.
 extensions = [
     'sphinx.ext.githubpages',
+    'sphinxcontrib.autoprogram',
     'sphinxcontrib.moderncmakedomain',
 ]
 

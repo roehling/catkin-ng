@@ -29,7 +29,7 @@ COMMANDS = {
 }
 
 
-def main():
+def create_argparse():
     main_parser = argparse.ArgumentParser(prog="python{} -m hazel".format(sys.version_info.major), description="hazel build system tool")
     sub_parsers = main_parser.add_subparsers(dest="command", metavar="ACTION")
     sub_parsers.required = True
@@ -38,7 +38,12 @@ def main():
         func = getattr(module, info.get("prepare_args", "prepare_args"))
         p = sub_parsers.add_parser(command, help=info.get("help", "undocumented action"))
         func(p)
-    args = main_parser.parse_args()
+    return main_parser
+
+
+def main():
+    p = create_argparse()
+    args = p.parse_args()
     info = COMMANDS.get(args.command)
     module = importlib.import_module(info.get("module", ".{}".format(args.command)), "hazel.commands")
     func = getattr(module, info.get("run", "run"))
