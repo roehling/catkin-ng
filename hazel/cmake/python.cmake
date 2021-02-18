@@ -97,10 +97,13 @@ function(hazel_python_setup)
                 string(REPLACE ";" ":" path_list "${path_list}")
             endif()
             set(PYTHONPATH "${path_list}")
+            file(WRITE "${HAZEL_GENERATED_DIR}/sitecustomize.py" "import site; import os; site.addsitedir(os.path.dirname(__file__))")
             add_custom_command(OUTPUT "${HAZEL_GENERATED_DIR}/python-develspace.stamp"
                 MAIN_DEPENDENCY "${arg_DIRECTORY}/setup.py"
                 WORKING_DIRECTORY "${arg_DIRECTORY}"
                 COMMAND "${CMAKE_COMMAND}" -E env "PYTHONPATH=${PYTHONPATH}" "${HAZEL_PYTHON_EXECUTABLE}" setup.py develop --no-deps --prefix "${HAZEL_DEVEL_PREFIX}" "--install-dir=${HAZEL_DEVEL_PYTHON_DIR}" "--script-dir=${HAZEL_DEVEL_PREFIX}/${script_bindir}"
+                COMMAND "${CMAKE_COMMAND}" -E remove -f "${HAZEL_DEVEL_PYTHON_DIR}/site.py"
+                COMMAND "${CMAKE_COMMAND}" -E copy_if_different "${HAZEL_GENERATED_DIR}/sitecustomize.py" "${HAZEL_DEVEL_PYTHON_DIR}"
                 COMMAND "${CMAKE_COMMAND}" -E touch "${HAZEL_GENERATED_DIR}/python-develspace.stamp"
                 VERBATIM)
             add_custom_target(python-develspace ALL DEPENDS "${HAZEL_GENERATED_DIR}/python-develspace.stamp")
