@@ -50,16 +50,22 @@ The following options are available:
       processing is done. Otherwise:
 
     * If :file:`{script}.cmake.in` exists, the :cmake:command:`configure_file`
-      command is invoked (with ``@ONLY``) to create ``<script>.cmake``, which
-      is installed. Otherwise:
+      command is invoked (with ``@ONLY``) to create :file:`{script}.cmake`,
+      which is installed. Otherwise:
 
     * If :file:`{script}.cmake.em` exists, the Empy preprocessor is invoked to
       create :file:`{script}.cmake`, which is installed. Otherwise:
-    
-    * If :file:`{script}.cmake.install.space.em` and/or
-      :file:`{script}.cmake.develspace-em` exist, the Empy preprocessor is
-      invoked to create separate :file:`{script}.cmake` versions for installation
-      and the local develspace. Otherwise:
+
+    * If :file:`{script}.cmake.installspace.in` and/or
+      :file:`{script}.cmake.develspace.in` exist, the
+      :cmake:command:`configure_file` command is invoked to create separate
+      :file:`{script}.cmake` versions for installspace and develspace.
+      Otherwise:
+   
+    * If :file:`{script}.cmake.installspace.em` and/or
+      :file:`{script}.cmake.develspace.em` exist, the Empy preprocessor is
+      invoked to create separate :file:`{script}.cmake` versions for
+      installspace and develspace. Otherwise:
     
     * Hazel raises a fatal error.
 
