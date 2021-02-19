@@ -65,3 +65,62 @@ not support pure `PEP 517`_ style builds, you must have a :file:`setup.py` even
 if it does nothing but invoke :py:func:`setup` without arguments.
 
 .. _PEP 517: https://www.python.org/dev/peps/pep-0517/
+
+Develspace limitations
+----------------------
+
+Hazel performs an `editable install`_ for the develspace. This is functionally
+similar to a symlink from the develspace into the actual package source
+directory, but implemented in a Python specific way, so it also works on
+platforms and filesystems which do not support symlinks.
+
+This method supports almost all setuptools features, including entry point
+scripts. There are two important limitations of which you need to be aware:
+
+1. Your Python source tree layout must mirror the install layout. It should
+   look similar to::
+
+        └── ros_package/
+            ├── package.xml
+            ├── CMakeLists.txt
+            ├── setup.py
+            └── src/
+                ├── py_package_a/
+                │   ├── __init__.py
+                │   └── ...
+                ├── py_package_b/
+                │   ├── __init__.py
+                │   └── ...
+                └── ...
+
+   Basically, if your :py:func:`setup` call needs a ``package_dir`` map that is more
+   complicated than ``{"": "path/to/my/sources"}``, it will not work properly.
+2. If your Python package has the same name as your ROS package `and` your
+   package exports ROS messages, you must implement your package as a `PEP 420`_
+   namespace package, so that Hazel can generate an overlay for the :py:mod:`msg`
+   and/or :py:mod:`srv` modules without writing them to your source tree::
+
+        └── ros_package/
+            ├── package.xml
+            ├── CMakeLists.txt
+            ├── setup.py
+            └── src/
+                └── ros_package/
+                    ├── subpackage_a/
+                    │   ├── __init__.py
+                    │   └── ...
+                    ├── subpackage_b/
+                    │   ├── __init__.py
+                    │   └── ...
+                    ├── toplevel_module_1.py
+                    ├── toplevel_module_2.py
+                    └── ...
+
+   Essentially, your top level module :py:mod:`ros_package` cannot have an
+   :file:`__init__.py`, and if you use :py:func:`find_packages` in your
+   :file:`setup.py`, you need to replace it with
+   :py:func:`find_namespace_packages`.
+
+.. _editable install: https://pip.pypa.io/en/stable/reference/pip_install/#editable-installs
+
+.. _PEP 420: https://www.python.org/dev/peps/pep-0420/
