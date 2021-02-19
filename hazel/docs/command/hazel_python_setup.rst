@@ -61,10 +61,8 @@ for your Python packages are in the :file:`src` subdirectory, a minimal working
     )
 
 Hazel also supports :file:`setup.cfg` configuration files. However, Hazel does
-not support pure `PEP 517`_ style builds, you must have a :file:`setup.py` even
+not support pure :pep:`517` style builds, you must have a :file:`setup.py` even
 if it does nothing but invoke :py:func:`setup` without arguments.
-
-.. _PEP 517: https://www.python.org/dev/peps/pep-0517/
 
 Develspace limitations
 ----------------------
@@ -96,7 +94,7 @@ scripts. There are two important limitations of which you need to be aware:
    Basically, if your :py:func:`setup` call needs a ``package_dir`` map that is more
    complicated than ``{"": "path/to/my/sources"}``, it will not work properly.
 2. If your Python package has the same name as your ROS package `and` your
-   package exports ROS messages, you must implement your package as a `PEP 420`_
+   package exports ROS messages, you must implement your package as a :pep:`420`
    namespace package, so that Hazel can generate an overlay for the :py:mod:`msg`
    and/or :py:mod:`srv` modules without writing them to your source tree::
 
@@ -122,5 +120,3 @@ scripts. There are two important limitations of which you need to be aware:
    :py:func:`find_namespace_packages`.
 
 .. _editable install: https://pip.pypa.io/en/stable/reference/pip_install/#editable-installs
-
-.. _PEP 420: https://www.python.org/dev/peps/pep-0420/
