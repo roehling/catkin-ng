@@ -43,23 +43,23 @@ The following options are available:
 
     Hazel will automatically invoke certain preprocessors if the corresponding
     templates are found. For each listed script, the ``.cmake`` suffix, if any,
-    will be stripped, forming the stem name ``<script>``. Then, Hazel looks for
+    will be stripped, forming the stem name :file:`{script}`. Then, Hazel looks for
     matching files in the following order:
 
-    * If ``<script>.cmake`` exists, it is installed verbatim and no further
+    * If :file:`{script}.cmake` exists, it is installed verbatim and no further
       processing is done. Otherwise:
 
-    * If ``<script>.cmake.in`` exists, the :cmake:command:`configure_file`
+    * If :file:`{script}.cmake.in` exists, the :cmake:command:`configure_file`
       command is invoked (with ``@ONLY``) to create ``<script>.cmake``, which
       is installed. Otherwise:
 
-    * If ``<script>.cmake.em`` exists, the Empy preprocessor is invoked to
-      create ``<script>.cmake``, which is installed. Otherwise:
+    * If :file:`{script}.cmake.em` exists, the Empy preprocessor is invoked to
+      create :file:`{script}.cmake`, which is installed. Otherwise:
     
-    * If ``<script>.cmake.installspace.em`` and/or
-      ``<script>.cmake.develspace.em`` exist, the Empy preprocessor is invoked
-      to create separate ``<script>.cmake`` versions for installation and the
-      local develspace. Otherwise:
+    * If :file:`{script}.cmake.install.space.em` and/or
+      :file:`{script}.cmake.develspace-em` exist, the Empy preprocessor is
+      invoked to create separate :file:`{script}.cmake` versions for installation
+      and the local develspace. Otherwise:
     
     * Hazel raises a fatal error.
 

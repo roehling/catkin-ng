@@ -2,8 +2,8 @@ Hello, World!
 =============
 
 For our very first Hazel package, we build a simple "Hello World" program. Most
-of it is not very different from any ROS package you would create. The main file
-``hello_world.cpp`` is a simple C++ program:
+of it is not very different from any ROS package you would create. The main
+file :file:`hello_world.cpp` is a simple C++ program:
 
 .. code-block:: c++
 
@@ -15,7 +15,7 @@ of it is not very different from any ROS package you would create. The main file
         return 0;
     }
 
-As with any ROS package, we need an XML manifest named ``package.xml`` that
+As with any ROS package, we need an XML manifest named :file:`package.xml` that
 describes our package metadata. Here, we add a ``buildtool_depend`` on
 ``hazel`` and set the ``build_type`` in the ``export`` block. Everything else
 is business as usual:
@@ -47,7 +47,7 @@ All these files end up in a folder structure like this::
         └── src
             └── hello_world.cpp
 
-The ``CMakeLists.txt`` is the main CMake file that configures the package
+The :file:`CMakeLists.txt` is the main CMake file that configures the package
 build. This is where most of the Hazel-specific stuff happens:
 
 .. code-block:: cmake
@@ -76,7 +76,7 @@ mechanism`_.
 The :cmake:command:`project` command in line 2 sets the project metadata and
 initializes a few project-related CMake variables. Hazel expects and enforces
 that the project name is the same as the package name you used in the
-``package.xml``. The ``VERSION`` and ``LANGUAGES`` options can be omitted.
+:file:`package.xml`. The ``VERSION`` and ``LANGUAGES`` options can be omitted.
 Hazel will automatically use the version number from the ``package.xml`` and
 complain if you use a different version here.
 
@@ -97,9 +97,9 @@ Executables and libraries are the most common build targets.
 The :cmake:command:`hazel_package` command in line 10 is the final command in
 every Hazel package and makes the created targets available for others. In this
 case, we want to export our ``hello_world`` target, so users can run our
-program with ``rosrun``. By the way, it is very common to name the main target
-like the package itself, and you are encouraged to follow this convention. It
-is not required, though.
+program with :command:`rosrun`. By the way, it is very common to name the main
+target like the package itself, and you are encouraged to follow this
+convention. It is not required, though.
 
 .. _CMake policy mechanism: https://cmake.org/cmake/help/latest/command/cmake_policy.html
 

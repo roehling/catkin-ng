@@ -25,18 +25,19 @@ Install Python modules.
         [GLOBAL_SCRIPTS]
     )
 
-The ``hazel_python_setup()`` command ensures that the ``setup.py`` of a wrapped
-Python package is invoked at build time and installs to the correct locations.
+The ``hazel_python_setup()`` command ensures that the :file:`setup.py` of a
+wrapped Python package is invoked at build time and installs to the correct
+locations.
 
-The ``DIRECTORY`` option specifies the source location of ``setup.py`` if it is
-not in the same location as the ``CMakeLists.txt`` that calls
+The ``DIRECTORY`` option specifies the source location of :file:`setup.py` if
+it is not in the same location as the :file:`CMakeLists.txt` that calls
 ``hazel_python_setup()``. Relative paths are interpreted relative to
 :cmake:variable:`CMAKE_CURRENT_SOURCE_DIR`.
 
 When the ``GLOBAL_SCRIPTS`` option is given, Python scripts will be installed
-to the global ``<prefix>/bin`` directory. By default, Python scripts will be
-installed to the package-specific ``<prefix>/lib/<package>`` directory, where
-they can be found by ``rosrun`` or ``ros2 run``.
+to the global :file:`{prefix}/bin` directory. By default, Python scripts will
+be installed to the package-specific :file:`{prefix}/lib/{package}` directory,
+where they can be found by :command:`rosrun` or :command:`ros2 run`.
 
 You should avoid polluting the global namespace with scripts unless they are
 essential for the ROS ecosystem and used frequently enough to warrant the
@@ -46,10 +47,10 @@ binaries.
 setuptools
 ----------
 
-Hazel provides a setuptools wrapper to automatically add metadata from the
-``package.xml`` to the Python package manifest. Assuming that the sources for
-your Python packages are in the ``src`` subdirectory, a minimal working
-``setup.py`` would be:
+Hazel provides a setuptools wrapper to automatically add metadata from
+:file:`package.xml` to the Python package manifest. Assuming that the sources
+for your Python packages are in the :file:`src` subdirectory, a minimal working
+:file:`setup.py` would be:
 
 .. code-block:: python
 
@@ -59,8 +60,8 @@ your Python packages are in the ``src`` subdirectory, a minimal working
         package_dir={"": "src"}
     )
 
-Hazel also supports ``setup.cfg`` configuration files. However, Hazel does not
-support pure `PEP 517`_ style builds, you must have a ``setup.py`` even if it
-does nothing but invoke :py:func:`setup` without arguments.
+Hazel also supports :file:`setup.cfg` configuration files. However, Hazel does
+not support pure `PEP 517`_ style builds, you must have a :file:`setup.py` even
+if it does nothing but invoke :py:func:`setup` without arguments.
 
 .. _PEP 517: https://www.python.org/dev/peps/pep-0517/
