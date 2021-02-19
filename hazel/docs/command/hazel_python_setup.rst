@@ -91,14 +91,12 @@ scripts. There are two important limitations of which you need to be aware:
                 │   └── ...
                 └── ...
 
-   Basically, if your :py:func:`setup` call needs a ``package_dir`` map that is
-   more complicated than ``{"": "relative/path/to/my/sources"}``, it will not
-   work properly.
-2. If your Python package has the same name as your ROS package (which is
-   arguably the common case) and your package exports ROS messages, you must
-   implement your package as a :pep:`420` namespace package, so that Hazel can
-   generate an overlay for the :py:mod:`msg` and/or :py:mod:`srv` modules
-   without writing them to your source tree::
+   Basically, if your :py:func:`setup` call needs a ``package_dir`` map that is more
+   complicated than ``{"": "path/to/my/sources"}``, it will not work properly.
+2. If your Python package has the same name as your ROS package `and` your
+   package exports ROS messages, you must implement your package as a :pep:`420`
+   namespace package, so that Hazel can generate an overlay for the :py:mod:`msg`
+   and/or :py:mod:`srv` modules without writing them to your source tree::
 
         └── ros_package/
             ├── package.xml
@@ -120,9 +118,5 @@ scripts. There are two important limitations of which you need to be aware:
    :file:`__init__.py`, and if you use :py:func:`find_packages` in your
    :file:`setup.py`, you need to replace it with
    :py:func:`find_namespace_packages`.
-
-   Unfortunately, this only works with Python 3.3+, so you may have to
-   separate your messages into a dedicated package if you need to support
-   older systems. On the other hand, this is best practise anyway.
 
 .. _editable install: https://pip.pypa.io/en/stable/reference/pip_install/#editable-installs
