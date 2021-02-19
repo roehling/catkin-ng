@@ -101,7 +101,7 @@ function(hazel_python_setup)
             add_custom_command(OUTPUT "${HAZEL_GENERATED_DIR}/python-develspace.stamp"
                 MAIN_DEPENDENCY "${arg_DIRECTORY}/setup.py"
                 WORKING_DIRECTORY "${arg_DIRECTORY}"
-                COMMAND "${CMAKE_COMMAND}" -E env "PYTHONPATH=${PYTHONPATH}" "${HAZEL_PYTHON_EXECUTABLE}" setup.py develop --no-deps --prefix "${HAZEL_DEVEL_PREFIX}" "--install-dir=${HAZEL_DEVEL_PYTHON_DIR}" "--script-dir=${HAZEL_DEVEL_PREFIX}/${script_bindir}"
+                COMMAND "${CMAKE_COMMAND}" -E env "PYTHONPATH=${PYTHONPATH}" "${HAZEL_PYTHON_EXECUTABLE}" -m pip install --no-deps --prefix "${HAZEL_DEVEL_PREFIX}" --install-option "--install-dir=${HAZEL_DEVEL_PYTHON_DIR}" --install-option "--script-dir=${HAZEL_DEVEL_PREFIX}/${script_bindir}" --editable .
                 COMMAND "${CMAKE_COMMAND}" -E remove -f "${HAZEL_DEVEL_PYTHON_DIR}/site.py"
                 COMMAND "${CMAKE_COMMAND}" -E copy_if_different "${HAZEL_GENERATED_DIR}/sitecustomize.py" "${HAZEL_DEVEL_PYTHON_DIR}"
                 COMMAND "${CMAKE_COMMAND}" -E touch "${HAZEL_GENERATED_DIR}/python-develspace.stamp"
@@ -109,7 +109,7 @@ function(hazel_python_setup)
             add_custom_target(python-develspace ALL DEPENDS "${HAZEL_GENERATED_DIR}/python-develspace.stamp")
         endif()
         file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/python-setup/build" "${CMAKE_CURRENT_BINARY_DIR}/python-setup/egg-info")
-        install(CODE "execute_process(WORKING_DIRECTORY \"${arg_DIRECTORY}\" COMMAND \"${HAZEL_PYTHON_EXECUTABLE}\" setup.py build -b \"${CMAKE_CURRENT_BINARY_DIR}/python-setup/build\" egg_info -e \"${CMAKE_CURRENT_BINARY_DIR}/python-setup/egg-info\" install \"--install-scripts=${CMAKE_INSTALL_PREFIX}/${script_bindir}\" \"--install-lib=${CMAKE_INSTALL_PREFIX}/${HAZEL_PYTHON_INSTALL_PACKAGES_DIR}\" --root \"\$ENV{DESTDIR}/\" --prefix \"${CMAKE_INSTALL_PREFIX}\" ${HAZEL_PYTHON_INSTALL_LAYOUT})")
+        install(CODE "execute_process(WORKING_DIRECTORY \"${arg_DIRECTORY}\" COMMAND \"${HAZEL_PYTHON_EXECUTABLE}\" -m pip install --no-deps --install-option \"--install-scripts=${CMAKE_INSTALL_PREFIX}/${script_bindir}\" --install-option \"--install-lib=${CMAKE_INSTALL_PREFIX}/${HAZEL_PYTHON_INSTALL_PACKAGES_DIR}\" --root \"\$ENV{DESTDIR}/\" --prefix \"${CMAKE_INSTALL_PREFIX}\" .)")
     else()
         message(SEND_ERROR "hazel_python_setup: 'setup.py' not found in '${arg_DIRECTORY}'")
     endif()
