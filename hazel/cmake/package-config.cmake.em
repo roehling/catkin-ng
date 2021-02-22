@@ -63,22 +63,17 @@ list(APPEND @(PROJECT_NAME)_TARGETS ${@(PROJECT_NAME)_DISCOVERED_TARGETS})
 
 list(APPEND HAZEL_IMPORTED_PACKAGES "@(PROJECT_NAME)")
 
-if(NOT ${CMAKE_FIND_PACKAGE_NAME}_FIND_QUIETLY)
+if(NOT @(PROJECT_NAME)_FIND_QUIETLY)
     set(status_msg "Found @(PROJECT_NAME): ${PACKAGE_PREFIX_DIR} (found version \"@(PROJECT_VERSION)\"")
-    if(${CMAKE_FIND_PACKAGE_NAME}_FIND_VERSION_RANGE)
-        string(APPEND status_msg ", required range is \"${${CMAKE_FIND_PACKAGE_NAME}_FIND_VERSION_RANGE}\"")
-    elif(${CMAKE_FIND_PACKAGE_NAME}_FIND_VERSION AND NOT ${CMAKE_FIND_PACKAGE_NAME}_FIND_VERSION_EXACT)
-        string(APPEND status_msg ", minimum required is \"${${CMAKE_FIND_PACKAGE_NAME}_FIND_VERSION}\"")
-    endif()
-    string(APPEND status_msg ")")
 @[if EXPORTED_TARGET_FILES]@
     list(LENGTH @(PROJECT_NAME)_TARGETS target_count)
     if(target_count EQUAL 1)
-        string(APPEND status_msg " and imported target ${@(PROJECT_NAME)_TARGETS}")
+        string(APPEND status_msg " and imported target \"${@(PROJECT_NAME)_TARGETS}\"")
     else()
         string(APPEND status_msg " and imported ${target_count} targets")
     endif()
 @[end if]@
+    string(APPEND status_msg ")")
     message(STATUS "${status_msg}")
 endif()
 
