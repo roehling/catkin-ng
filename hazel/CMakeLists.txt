@@ -19,7 +19,7 @@
 cmake_minimum_required(VERSION 3.10)
 project(hazel)
 
-option(BUILD_DOCS "Build and install Sphinx documentation" ON)
+option(BUILD_DOCS "Build and install Sphinx documentation" OFF)
 
 include(cmake/all.cmake)
 include(CMakePackageConfigHelpers)
