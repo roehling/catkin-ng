@@ -91,12 +91,13 @@ scripts. There are two important limitations of which you need to be aware:
                 │   └── ...
                 └── ...
 
-   Basically, if your :py:func:`setup` call needs a ``package_dir`` map that is more
-   complicated than ``{"": "path/to/my/sources"}``, it will not work properly.
+   As a rule of thumb, if your :py:func:`setup` call needs a ``package_dir`` map
+   more complicated than ``{"": "relative/path/to/modules"}``, it will
+   likely not work.
 2. If your Python package has the same name as your ROS package `and` your
    package exports ROS messages, you must implement your package as a :pep:`420`
    namespace package, so that Hazel can generate an overlay for the :py:mod:`msg`
-   and/or :py:mod:`srv` modules without writing them to your source tree::
+   and/or :py:mod:`srv` submodules without writing them to your source tree::
 
         └── ros_package/
             ├── package.xml
@@ -114,7 +115,7 @@ scripts. There are two important limitations of which you need to be aware:
                     ├── toplevel_module_2.py
                     └── ...
 
-   Essentially, your top level module :py:mod:`ros_package` cannot have an
+   Your top level module :py:mod:`ros_package` cannot have an
    :file:`__init__.py`, and if you use :py:func:`find_packages` in your
    :file:`setup.py`, you need to replace it with
    :py:func:`find_namespace_packages`.
